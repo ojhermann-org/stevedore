@@ -22,8 +22,8 @@ enum Command {
     Stores,
     /// Move secrets from a source store to a sink store.
     ///
-    /// The default is a dry-run: stevedore reads the source and reports what
-    /// would move without writing anything. Pass `--apply` to actually write.
+    /// Dry-run by default: reads the source and reports what would move without
+    /// writing anything. Pass `--apply` to actually write.
     Migrate(MigrateArgs),
 }
 
@@ -61,15 +61,14 @@ fn main() -> Result<()> {
                 stevedore::proton::NAME
             );
         }
+        // The migration engine isn't built yet (ADR-0003): wire the args through
+        // and fail honestly rather than pretend to move anything.
         Command::Migrate(MigrateArgs {
             from,
             to,
             input,
             apply,
         }) => {
-            // The migration engine is still under construction (ADR-0003). For
-            // now the CLI wires the arguments through and reports honestly
-            // rather than pretending to move anything.
             let where_from = input
                 .map(|p| format!(" from {}", p.display()))
                 .unwrap_or_default();

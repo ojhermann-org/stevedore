@@ -1,33 +1,26 @@
 //! Planning a move.
 //!
-//! `stevedore` is a one-shot mover, so the safe default is to **plan** (a
-//! dry-run: read the source, show what would move) and let a human confirm
-//! before anything is written to the sink. [`Plan`] is that intermediate.
+//! `stevedore` is a one-shot mover, so the safe default is to **plan** — read
+//! the source, show what would move — and let a human confirm before anything is
+//! written. [`Plan`] is that intermediate; building it touches only the source.
 
 use crate::secret::SecretRecord;
 
-/// What a migration *would* move, computed without touching the destination.
-///
-/// Building a `Plan` reads only the source store; applying it (writing to the
-/// sink) is a separate, deliberate step.
+/// What a migration would move, computed without touching the destination.
 #[derive(Debug, Default)]
 pub struct Plan {
-    /// The records the plan would move, in source order.
     pub records: Vec<SecretRecord>,
 }
 
 impl Plan {
-    /// A plan to move exactly these records.
     pub fn from_records(records: Vec<SecretRecord>) -> Self {
         Self { records }
     }
 
-    /// How many records the plan would move.
     pub fn len(&self) -> usize {
         self.records.len()
     }
 
-    /// Whether the plan would move nothing.
     pub fn is_empty(&self) -> bool {
         self.records.is_empty()
     }

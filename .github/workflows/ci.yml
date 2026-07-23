@@ -14,24 +14,20 @@ permissions:
   contents: read
 
 jobs:
-  # The job name is the required-status-check context in
-  # .github/rulesets/main.json — renaming this job silently breaks the branch
-  # protection requirement. Keep them in sync.
+  # `ci` is the required-status-check context in .github/rulesets/main.json —
+  # renaming this job silently breaks the branch protection. Keep them in sync.
   ci:
     name: ci
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
 
-      # CI uses the same Nix flake as local dev, so the Rust toolchain and
-      # cargo-deny versions match exactly — a gate that passes locally passes
-      # here.
+      # Same flake as local dev, so a gate that passes locally passes here.
       - name: Install Nix
         uses: DeterminateSystems/nix-installer-action@main
 
-      # Swatinem/rust-cache keys its cache off `rustc`/`cargo`, which live in the
-      # flake dev shell rather than on the runner's PATH. Expose that bin dir so
-      # the cache action can find the toolchain.
+      # rust-cache keys off `rustc`/`cargo`, which live in the flake dev shell
+      # rather than on the runner PATH — expose that bin dir so it can find them.
       - name: Expose the flake's Rust toolchain on PATH
         run: nix develop --command bash -c 'dirname "$(command -v cargo)" >> "$GITHUB_PATH"'
 
