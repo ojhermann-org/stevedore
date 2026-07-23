@@ -38,6 +38,22 @@ and update the affected docs in the same PR:
   descriptions** — these *are* the docs for those surfaces.
 - **ADRs** (`docs/adr/`) — a *new* ADR for any non-trivial design/process decision.
 
+## Comments: let the code speak first
+
+Keep comments minimal and purposeful. The **code, tests, and documentation**
+should carry the meaning; a comment earns its place only when it adds something
+they can't.
+
+- **Doc comments (`///`, `//!`) stay** — they're the documentation surface
+  (rustdoc, docs.rs, `--help`). Keep them, but tight.
+- **Cut narration.** Don't restate what the next line plainly does. Reach first
+  for a clearer name, a smaller function, or a test — not a comment that explains
+  code that could explain itself.
+- **Keep the "why."** A comment capturing non-obvious *intent* — a constraint, a
+  footgun, the reason behind a choice (e.g. the `SecretValue` redaction contract,
+  the `ci`-job-name-must-match-the-check note) — is exactly what belongs in a
+  comment, because it isn't recoverable from the code.
+
 ## Repo & release conventions
 
 - **Everything lands through a PR** — `main` is branch-protected (requires the
