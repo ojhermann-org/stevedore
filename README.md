@@ -7,7 +7,11 @@ server**.
 
 ## Stores
 
-- [Dashlane](docs/dcli/)
+🟢 working · 🟡 in progress · 🔵 planned · 🔴 not planned
+
+| Store                  | Read | Write |
+| ---------------------- | :--: | :---: |
+| [Dashlane](docs/dcli/) |  🟡  |  🔴   |
 
 ## What it is (and isn't)
 
