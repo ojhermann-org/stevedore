@@ -15,4 +15,4 @@ Install `dcli` by following Dashlane's own
 
 ## Scope
 
-- [Personal](/docs/dcli/personal.md)
+- [Personal](personal.md)
