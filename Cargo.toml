@@ -7,7 +7,7 @@ members = [
 ]
 
 # Shared metadata, dependency versions, and lints, inherited by every member
-# crate via `field.workspace = true` (see the README Design & scope section).
+# crate via `field.workspace = true`.
 [workspace.package]
 # No shared `version`: each crate carries its own. Nothing is published yet —
 # every crate is `publish = false` until the owner cuts a release.

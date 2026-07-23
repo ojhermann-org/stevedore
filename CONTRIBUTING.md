@@ -10,9 +10,9 @@ right now are around that first route and the core library shape.
   pasted credential must never land in git. The `.githooks/pre-commit` guard
   scans staged changes with `gitleaks` and blocks secret files — arm it with
   `git config core.hooksPath .githooks`. Don't work around it.
-- **Read the README's [Design & scope](README.md#design--scope) first.** It
-  records why things are the way they are — mover-not-resolver; no `Store` trait
-  until store #3/#4; store access via each vendor's CLI; MCP deferred.
+- **Read [`CLAUDE.md`](CLAUDE.md) first.** It records the conventions and why
+  things are the way they are — mover-not-resolver; no `Store` trait until store
+  #3/#4; MCP deferred.
 
 ## Development
 

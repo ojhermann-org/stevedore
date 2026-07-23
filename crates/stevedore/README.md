@@ -6,8 +6,7 @@ read secret records from a **source** store, plan the move, and write them to a
 
 > Early scaffold. The source readers and sink writers are honest stubs today —
 > they return an "unimplemented" error rather than pretend to succeed — while the
-> first route (Dashlane → Proton Pass) is built. See the repo README's
-> **Design & scope** section for the design.
+> first route (Dashlane → Proton Pass) is built.
 
 ## Shape
 

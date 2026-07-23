@@ -13,20 +13,15 @@ authenticated, unlocked `dcli` and only preflights it.
 
 ## Scope
 
-This directory maps only the slices of `dcli` that stevedore depends on. Today
-that's one:
-
 | Slice | Doc | Covers |
 |-------|-----|--------|
 | Personal | [personal.md](personal.md) | The one-time auth setup and read-only vault, for a personal Dashlane account. |
 
 Personal is **Master Password + 2FA** (email code, TOTP, or Duo) only.
 Self-hosted SSO and Confidential SSO (Nitro Enclaves) are **out of scope** — this
-tool doesn't target them. Other slices (e.g. Business) can be added as sibling
-docs later without reshuffling.
+tool doesn't target them.
 
 ## Install
 
 Install `dcli` by following Dashlane's own
-[installation guide](https://cli.dashlane.com/install), then see
-[Personal](personal.md) for the one-time setup.
+[installation guide](https://cli.dashlane.com/install).
