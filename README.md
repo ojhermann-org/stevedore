@@ -7,12 +7,11 @@ server**.
 
 ## Stores
 
-🟢 working · 🟡 in progress
+🟢 working · 🟡 in progress · 🔵 planned · 🔴 not planned
 
 | Store                  | Read | Write |
 | ---------------------- | :--: | :---: |
-| [Dashlane](docs/dcli/) |  🟡  |   —   |
-| Proton Pass            |  —   |  🟡   |
+| [Dashlane](docs/dcli/) |  🟡  |  🔴   |
 
 ## What it is (and isn't)
 
