@@ -1,42 +1,35 @@
 # stevedore
 
-> Move secrets between password managers and vaults.
-
-A stevedore moves cargo between vessels. This one moves **secrets** between
-stores — reading them out of one password manager or vault and writing them into
-another, as a one-shot, verifiable migration. It's a Rust workspace with three
-deliverables: a **library**, a **CLI**, and an **MCP server** for agents.
-
-The first route under construction is **Dashlane → Proton Pass**.
+A stevedore moves cargo between vessels; `stevedore` moves **secrets** between
+stores — reading them out of one and writing them into another. It's a Rust
+workspace with three deliverables: a **library**, a **CLI**, and an **MCP
+server**.
 
 ## Stores
-
-The stores stevedore moves secrets between, each driven through its own
-command-line tool and documented under [`docs/`](docs/):
 
 - [Dashlane](docs/dcli/)
 
 ## What it is (and isn't)
 
-- **A mover, not a resolver.** stevedore *migrates* secret values from a source
-  store to a sink store. Runtime secret *resolution* — an app fetching its own
-  key at start-up — is [secretspec](https://github.com/cachix/secretspec)'s job;
-  stevedore composes with that world.
+- **A mover.** stevedore _migrates_ secret values from a source store to a sink
+  store.
+- **Not a resolver.** Runtime secret _resolution_ — an app fetching its own key
+  at start-up — is what [secretspec](https://github.com/cachix/secretspec) does.
 - **Safe by default.** Secret values redact themselves in logs by construction,
   and `migrate` is a dry-run unless you pass `--apply`.
 
 ## Layout
 
-| Crate | What it is |
-|-------|-----------|
-| [`crates/stevedore`](crates/stevedore) | The core library: `SecretRecord`, redacting `SecretValue`, `Plan`, and the concrete modules. |
+| Crate                                          | What it is               |
+| ---------------------------------------------- | ------------------------ |
+| [`crates/stevedore`](crates/stevedore)         | The core library.        |
 | [`crates/stevedore-cli`](crates/stevedore-cli) | The command-line binary. |
-| [`crates/stevedore-mcp`](crates/stevedore-mcp) | The MCP server. |
+| [`crates/stevedore-mcp`](crates/stevedore-mcp) | The MCP server.          |
 
 ## Develop
 
-The dev environment is a Nix flake (Rust toolchain, `cargo-deny`, `bacon`,
-`gitleaks`); [direnv](https://direnv.net/) loads it on entry.
+The dev environment is a Nix flake; [direnv](https://direnv.net/) loads it on
+entry.
 
 ```console
 # one-time, per clone:
@@ -56,10 +49,10 @@ CI runs `fmt`, `clippy`, `test`, and `cargo deny check` through the same flake.
 
 ### A note on secrets
 
-stevedore's inputs are *your other stores' credentials*. They are supplied
+stevedore's inputs are _your other stores' credentials_. They are supplied
 deliberately for a single run — never committed, never loaded ambiently into
 every shell. The `.gitignore` and the `.githooks/pre-commit` guard exist to keep
-it that way; don't work around them.
+it that way.
 
 ## License
 
