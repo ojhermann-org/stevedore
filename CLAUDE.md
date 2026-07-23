@@ -40,7 +40,11 @@ and update the affected docs in the same PR:
   descriptions** — these *are* the docs for those surfaces.
 - **Store CLI docs (`docs/dcli/`)** — how a user sets up an external store CLI
   stevedore drives. These track a third-party tool that drifts, so keep them tight
-  and defer the canonical flow to the vendor's own docs.
+  and defer the canonical flow to the vendor's own docs. Name a store CLI's
+  subcommands **in full** everywhere — docs, code, commit messages — so
+  `dcli password`, never `dcli p`. The short aliases are incomplete (`secret`,
+  `status`, and `read` have none), so full names are the only convention that
+  applies uniformly.
 - **Design decisions** — this repo keeps **no separate decision log (no ADRs)**,
   and the `README.md` is **user-facing**, not a decision record. A non-trivial
   design/process decision goes into `CLAUDE.md` (working rules) and/or a Claude
