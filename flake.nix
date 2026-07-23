@@ -41,6 +41,8 @@
             pkgs.cargo-deny # dependency license / advisory / ban policy (deny.toml)
             pkgs.bacon # background `cargo check`/clippy/test runner
             pkgs.gitleaks # secret scanner for the pre-commit guard (.githooks/pre-commit)
+            pkgs.actionlint # GitHub Actions workflow linter (.github/workflows)
+            pkgs.yamllint
           ];
 
           env.RUST_BACKTRACE = "1";
