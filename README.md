@@ -34,7 +34,7 @@ entry.
 ```console
 # one-time, per clone:
 cp .envrc.example .envrc && direnv allow   # loads the flake dev shell
-git config core.hooksPath .githooks        # arm the secret-scanning pre-commit guard
+git config core.hooksPath .githooks        # arm the git hooks (pre-commit secret scan + pre-push fmt/clippy)
 
 # or without direnv:
 nix develop
