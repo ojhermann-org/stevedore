@@ -59,8 +59,9 @@ move) and requires an explicit `--apply` to write to a sink.
 
 **Store access is via each vendor's CLI.** The Dashlane source reads through the
 official [`dcli`](https://github.com/Dashlane/dashlane-cli) (values stay
-in-process, structured JSON, no plaintext file on disk); the Proton sink writes
-through `pass-cli`. The FIDO **Credential Exchange** standard (CXF/CXP) is the
+in-process, structured JSON, no plaintext file on disk — see
+[`docs/dcli/`](docs/dcli/) for the one-time personal-auth setup); the Proton sink
+writes through `pass-cli`. The FIDO **Credential Exchange** standard (CXF/CXP) is the
 plausible long-term channel but is **deferred** — today Dashlane's CXP is an
 OS-mediated, mobile-only, device-to-device handoff (no file a headless tool can
 read) and Proton Pass doesn't support it yet. Revisit if both a file-based CXF

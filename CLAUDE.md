@@ -4,6 +4,8 @@ Rust workspace: a library that **moves secrets between password managers and
 vaults**, a CLI, and an MCP server. See [`README.md`](README.md) for
 orientation — its **Design & scope** section holds the decisions that fix the
 shape (first route Dashlane → Proton; mover-not-resolver; no `Store` trait yet).
+The Dashlane source's one-time `dcli` setup (personal auth) is documented in
+[`docs/dcli/`](docs/dcli/).
 
 These rules layer on top of the global permission model (auto mode + classifier).
 Their job is to tell the classifier what counts as **"important"** to delete or
@@ -36,6 +38,9 @@ and update the affected docs in the same PR:
 - **Crate-level rustdoc** (`//!`) and item docs — the docs.rs front page.
 - **CLI `--help`** (clap doc comments) and, once it exists, **MCP tool
   descriptions** — these *are* the docs for those surfaces.
+- **Store CLI docs (`docs/dcli/`)** — how a user sets up an external store CLI
+  stevedore drives. These track a third-party tool that drifts, so keep them tight
+  and defer the canonical flow to the vendor's own docs.
 - **Design decisions** — this repo keeps **no separate decision log (no ADRs)**.
   A non-trivial design/process decision goes into the `README.md` **Design &
   scope** section (and `CLAUDE.md` if it's a working rule); durable context that
