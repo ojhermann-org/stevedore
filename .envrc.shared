@@ -1,0 +1,12 @@
+# Committed, secret-free shared config — sourced by the untracked .envrc
+# (`source_env .envrc.shared`). No secret VALUES live here; keep it that way.
+
+# Pinned dev toolchain (Rust, cargo-deny, bacon, gitleaks). Requires nix-direnv.
+use flake
+
+# stevedore does NOT inject secrets on shell entry. Unlike a service that reads
+# its own API key from a vault, stevedore's inputs are *other people's* store
+# credentials, supplied deliberately at run time (flags / prompts / env for a
+# single invocation) — never loaded ambiently into every shell, and never
+# committed. If you must set one for a local run, put it in the untracked
+# `.envrc` (gitignored), not here.

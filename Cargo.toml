@@ -1,0 +1,31 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/stevedore",
+    "crates/stevedore-cli",
+    "crates/stevedore-mcp",
+]
+
+# Shared metadata, dependency versions, and lints, inherited by every member
+# crate via `field.workspace = true` (see docs/adr/0002-workspace-layout.md).
+[workspace.package]
+# No shared `version`: each crate carries its own. Nothing is published yet —
+# every crate is `publish = false` until the owner cuts a release.
+edition = "2021"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/ojhermann-org/stevedore"
+
+[workspace.dependencies]
+# The library's only runtime dependency for now: ergonomic error enums.
+thiserror = "2"
+# Reserved for the source/sink implementations and their on-disk formats.
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+# Binary-only (the CLI): ergonomic error context and arg parsing.
+anyhow = "1"
+clap = { version = "4", features = ["derive"] }
+
+# A secrets tool has no business writing `unsafe`. Forbid it workspace-wide;
+# individual crates opt in via `[lints] workspace = true`.
+[workspace.lints.rust]
+unsafe_code = "forbid"

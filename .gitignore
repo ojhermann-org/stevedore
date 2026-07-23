@@ -1,0 +1,30 @@
+# Rust / Cargo
+/target
+**/*.rs.bk
+Cargo.lock.orig
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# Nix / direnv
+result
+result-*
+.direnv/
+
+# Local direnv entry point — untracked; holds any raw secret fallback for a
+# one-off local run. The shared, secret-free config (.envrc.shared) and its
+# template (.envrc.example) ARE tracked.
+.envrc
+.envrc.local
+
+# Exports pulled from a source store while testing — never commit vault dumps.
+*.dashlane
+/exports/
+
+# Editor / OS
+.DS_Store
+*.swp
+.idea/
+.vscode/

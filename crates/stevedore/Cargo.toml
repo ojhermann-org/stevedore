@@ -1,0 +1,17 @@
+[package]
+name = "stevedore"
+description = "Move secrets between password managers and vaults — the core library."
+version = "0.0.0"
+publish = false
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+readme = "README.md"
+keywords = ["secrets", "password-manager", "vault", "migration"]
+categories = ["command-line-utilities", "cryptography"]
+
+[dependencies]
+thiserror = { workspace = true }
+
+[lints]
+workspace = true

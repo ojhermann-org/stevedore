@@ -1,0 +1,22 @@
+[package]
+name = "stevedore-cli"
+description = "Command-line interface for stevedore — move secrets between password managers and vaults."
+version = "0.0.0"
+publish = false
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+readme = "README.md"
+
+[[bin]]
+name = "stevedore"
+path = "src/main.rs"
+
+[dependencies]
+# The library, by workspace path (see ADR-0002).
+stevedore = { path = "../stevedore" }
+anyhow = { workspace = true }
+clap = { workspace = true }
+
+[lints]
+workspace = true

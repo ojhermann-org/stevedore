@@ -1,0 +1,9 @@
+# Template for the untracked, machine-local `.envrc`. Copy it and allow it:
+#
+#   cp .envrc.example .envrc && direnv allow
+#
+# The tracked `.envrc.shared` does the real work (loads the nix flake); this
+# thin shim just sources it. Anything secret-bearing for a one-off local run
+# goes in `.envrc` (gitignored) — never in `.envrc.shared`.
+
+source_env .envrc.shared

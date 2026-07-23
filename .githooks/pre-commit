@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+#
+# pre-commit secret guard. Especially load-bearing here: stevedore's whole job
+# is handling secret *values*, so a stray export or a pasted credential must
+# never reach a commit. Two layers, both scanning only what's staged:
+#
+#   1. A hard block on staged secret files (.envrc, .envrc.local, .env, .env.*,
+#      and vault exports *.dashlane / exports/) — belt-and-suspenders over
+#      .gitignore, which `git add -f` bypasses. The tracked, secret-free
+#      .envrc.shared / .envrc.example are allowed.
+#   2. gitleaks scans the staged diff for secret patterns. Skipped with a
+#      warning if gitleaks isn't installed; the file block above still holds.
+#
+# Enabled per clone via core.hooksPath (see .githooks/pre-push for the one-time
+# `git config core.hooksPath .githooks`); no separate activation.
+set -euo pipefail
+
+# --- 1. Block staged secret files -------------------------------------------
+blocked=""
+while IFS= read -r file; do
+  base="$(basename "$file")"
+  case "$base" in
+    # Tracked and deliberately secret-free — always allowed.
+    .envrc.shared | .envrc.example | .env.example) continue ;;
+    # The secret-bearing shapes — never commit these.
+    .envrc | .envrc.local | .env | .env.*)
+      blocked+="  $file"$'\n' ;;
+  esac
+  # Vault exports pulled from a source store while testing.
+  case "$file" in
+    *.dashlane | exports/*)
+      blocked+="  $file"$'\n' ;;
+  esac
+done < <(git diff --cached --name-only --diff-filter=AM)
+
+if [ -n "$blocked" ]; then
+  echo "pre-commit: refusing to commit secret file(s):" >&2
+  printf '%s' "$blocked" >&2
+  echo "These may hold secret material and must never be committed." >&2
+  echo "If this is genuinely safe, rename the file or edit .githooks/pre-commit." >&2
+  exit 1
+fi
+
+# --- 2. Scan the staged diff for secret patterns ----------------------------
+if command -v gitleaks >/dev/null 2>&1; then
+  echo "pre-commit: scanning staged changes with gitleaks…"
+  gitleaks git --staged --no-banner --redact
+  echo "pre-commit: no secrets detected."
+else
+  echo "pre-commit: gitleaks not found on PATH; skipping secret scan." >&2
+  echo "            (enter the dev shell or install gitleaks to enable it.)" >&2
+fi

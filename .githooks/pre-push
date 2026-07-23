@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+#
+# One-time activation reminder. `core.hooksPath` is per-clone and not carried by
+# git, so on a fresh clone the guard in .githooks/ is silently inactive until:
+#
+#   git config core.hooksPath .githooks
+#
+# This pre-push hook is itself only reached once that config points here, so its
+# presence in your run confirms the hooks are armed. It does no work of its own.
+set -euo pipefail
+exit 0
