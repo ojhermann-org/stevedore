@@ -56,12 +56,12 @@ fn main() -> Result<()> {
             println!("sources: {}", stevedore::dashlane::NAME);
             println!("sinks:   {}", stevedore::proton::NAME);
             println!(
-                "routes:  {} -> {} (in progress, ADR-0003)",
+                "routes:  {} -> {} (in progress)",
                 stevedore::dashlane::NAME,
                 stevedore::proton::NAME
             );
         }
-        // The migration engine isn't built yet (ADR-0003): wire the args through
+        // The migration engine isn't built yet: wire the args through
         // and fail honestly rather than pretend to move anything.
         Command::Migrate(MigrateArgs {
             from,
@@ -74,7 +74,7 @@ fn main() -> Result<()> {
                 .unwrap_or_default();
             anyhow::bail!(
                 "migrate {from:?} -> {to:?}{where_from} (apply={apply}) is not \
-                 implemented yet; see ADR-0003"
+                 implemented yet"
             );
         }
     }

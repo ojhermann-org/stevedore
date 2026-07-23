@@ -1,8 +1,8 @@
 //! Sink: write secret records into a Proton Pass vault.
 //!
 //! Proton Pass has no public write API yet, so the path in (an import format vs.
-//! an authenticated session) is an open decision (ADR-0003); until it's settled
-//! this reports the work as unimplemented.
+//! an authenticated session) is an open decision; until it's settled this
+//! reports the work as unimplemented.
 
 use crate::error::{Error, Result};
 use crate::secret::SecretRecord;

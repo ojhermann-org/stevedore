@@ -1,8 +1,8 @@
 //! Source: read secret records from a Dashlane export.
 //!
 //! Dashlane exports its vault (Settings → Export) as CSV files or an encrypted
-//! archive. Parsing that into [`SecretRecord`]s is the first real milestone
-//! (ADR-0003); until then this reports the work as unimplemented.
+//! archive. Parsing that into [`SecretRecord`]s is the first real milestone;
+//! until then this reports the work as unimplemented.
 
 use std::path::Path;
 

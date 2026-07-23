@@ -1,9 +1,9 @@
 # stevedore — Claude Code guidance
 
 Rust workspace: a library that **moves secrets between password managers and
-vaults**, a CLI, and an MCP server. See `README.md` and `docs/adr/` for
-orientation — start with [ADR-0003](docs/adr/0003-first-target-and-store-model.md)
-(first route Dashlane → Proton; mover-not-resolver; no `Store` trait yet).
+vaults**, a CLI, and an MCP server. See [`README.md`](README.md) for
+orientation — its **Design & scope** section holds the decisions that fix the
+shape (first route Dashlane → Proton; mover-not-resolver; no `Store` trait yet).
 
 These rules layer on top of the global permission model (auto mode + classifier).
 Their job is to tell the classifier what counts as **"important"** to delete or
@@ -36,7 +36,10 @@ and update the affected docs in the same PR:
 - **Crate-level rustdoc** (`//!`) and item docs — the docs.rs front page.
 - **CLI `--help`** (clap doc comments) and, once it exists, **MCP tool
   descriptions** — these *are* the docs for those surfaces.
-- **ADRs** (`docs/adr/`) — a *new* ADR for any non-trivial design/process decision.
+- **Design decisions** — this repo keeps **no separate decision log (no ADRs)**.
+  A non-trivial design/process decision goes into the `README.md` **Design &
+  scope** section (and `CLAUDE.md` if it's a working rule); durable context that
+  isn't repo-shaped is worth a Claude Code **memory**.
 
 ## Comments: let the code speak first
 
@@ -66,16 +69,17 @@ they can't.
 - **Nothing is published yet.** Every crate is `publish = false`. Cutting a
   release — flipping that, versioning, tagging, wiring release-plz / crates.io —
   is the owner's call, not ordinary development.
-- **The MCP surface is deferred** (ADR-0003). When it lands, release
-  MCP-surface changes promptly and on their own (the `ferric-fred` discipline),
-  because listing/scoring builds from `main`.
+- **The MCP surface is deferred** (see README **Design & scope**). When it lands,
+  release MCP-surface changes promptly and on their own (the `ferric-fred`
+  discipline), because listing/scoring builds from `main`.
 
 ## Deletion & creation (what's sensitive here)
 
 **Ask before deleting or substantively rewriting:**
 
-- **ADRs (`docs/adr/NNNN-*.md`).** Append-only decision history — supersede with a
-  new ADR, don't delete or gut an accepted one. Typo/link fixes are fine.
+- **The `README.md` "Design & scope" section.** It's the repo's decision history
+  now that there are no ADRs — revise a decision deliberately (and record what
+  changed), don't quietly gut it. Typo/link fixes are fine.
 - **Lockfiles (`flake.lock`, `Cargo.lock`).** Regenerate through tooling
   (`nix flake update`, `cargo update`) — never hand-delete.
 - **Tracked env config (`.envrc.shared`, `.envrc.example`)** and
@@ -85,11 +89,12 @@ they can't.
 
 **When creating:**
 
-- **New ADR:** copy `docs/adr/0000-adr-template.md`, next sequential number (no
-  gaps), add it to `docs/adr/README.md`.
-- **New crate:** follow the workspace layout in
-  [ADR-0002](docs/adr/0002-workspace-layout.md) — consumers depend on the library
-  by workspace path; keep that compile-time coupling intact.
+- **New design decision:** record it in the `README.md` **Design & scope**
+  section (no separate ADR file) — and in `CLAUDE.md` / a memory if it's a working
+  rule or durable context.
+- **New crate:** follow the workspace layout in the README **Design & scope**
+  section — consumers depend on the library by workspace path; keep that
+  compile-time coupling intact.
 - **New store (source or sink):** it's a concrete module for now — do **not**
   introduce a `Store` trait to add store #2. The abstraction waits for #3/#4
-  (ADR-0003).
+  (README **Design & scope**).
