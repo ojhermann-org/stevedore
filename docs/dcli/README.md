@@ -4,9 +4,7 @@ stevedore's Dashlane **source** reads a vault through Dashlane's official,
 open-source CLI, [`dcli`](https://github.com/Dashlane/dashlane-cli). Reading
 through `dcli` keeps secret values **in-process** — structured JSON on stdout, no
 plaintext export file on disk — and vault access is **read-only**, which is
-exactly what a migration source needs. Why `dcli` rather than the FIDO Credential
-Exchange export is covered in the root
-[README's **Design & scope**](../../README.md#design--scope).
+exactly what a migration source needs.
 
 **stevedore never authenticates.** Registering a device, entering the Master
 Password, and passing 2FA are a **one-time setup the user performs with `dcli`
@@ -29,15 +27,6 @@ docs later without reshuffling.
 
 ## Install
 
-`dcli` is a Node application; install it as a packaged binary rather than from
-source — Dashlane advises against a manual install when you use the local
-keychain.
-
-- **Homebrew** (macOS/Linux, recommended — auto-updates):
-  `brew install dashlane/tap/dashlane-cli`
-- **Standalone binary**: from the
-  [releases page](https://github.com/Dashlane/dashlane-cli/releases)
-  (`dcli-macos-x64`, `dcli-linux-x64`, `dcli-win-x64.exe`).
-
-See Dashlane's [install guide](https://cli.dashlane.com/install) for details, and
-[Personal](personal.md) for what to do once it's installed.
+Install `dcli` by following Dashlane's own
+[installation guide](https://cli.dashlane.com/install), then see
+[Personal](personal.md) for the one-time setup.

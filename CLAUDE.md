@@ -1,11 +1,11 @@
 # stevedore — Claude Code guidance
 
 Rust workspace: a library that **moves secrets between password managers and
-vaults**, a CLI, and an MCP server. See [`README.md`](README.md) for
-orientation — its **Design & scope** section holds the decisions that fix the
-shape (first route Dashlane → Proton; mover-not-resolver; no `Store` trait yet).
-The Dashlane source's one-time `dcli` setup (personal auth) is documented in
-[`docs/dcli/`](docs/dcli/).
+vaults**, a CLI, and an MCP server. [`README.md`](README.md) is the user-facing
+orientation; the decisions that fix the shape (first route Dashlane → Proton;
+mover-not-resolver; no `Store` trait yet) are recorded in **this file and the
+project memories**, not the README. The Dashlane source's one-time `dcli` setup
+(personal auth) is documented in [`docs/dcli/`](docs/dcli/).
 
 These rules layer on top of the global permission model (auto mode + classifier).
 Their job is to tell the classifier what counts as **"important"** to delete or
@@ -41,10 +41,11 @@ and update the affected docs in the same PR:
 - **Store CLI docs (`docs/dcli/`)** — how a user sets up an external store CLI
   stevedore drives. These track a third-party tool that drifts, so keep them tight
   and defer the canonical flow to the vendor's own docs.
-- **Design decisions** — this repo keeps **no separate decision log (no ADRs)**.
-  A non-trivial design/process decision goes into the `README.md` **Design &
-  scope** section (and `CLAUDE.md` if it's a working rule); durable context that
-  isn't repo-shaped is worth a Claude Code **memory**.
+- **Design decisions** — this repo keeps **no separate decision log (no ADRs)**,
+  and the `README.md` is **user-facing**, not a decision record. A non-trivial
+  design/process decision goes into `CLAUDE.md` (working rules) and/or a Claude
+  Code **memory** (durable context); touch the README only when the decision
+  changes how someone *uses* stevedore.
 
 ## Comments: let the code speak first
 
@@ -74,17 +75,17 @@ they can't.
 - **Nothing is published yet.** Every crate is `publish = false`. Cutting a
   release — flipping that, versioning, tagging, wiring release-plz / crates.io —
   is the owner's call, not ordinary development.
-- **The MCP surface is deferred** (see README **Design & scope**). When it lands,
-  release MCP-surface changes promptly and on their own (the `ferric-fred`
-  discipline), because listing/scoring builds from `main`.
+- **The MCP surface is deferred.** When it lands, release MCP-surface changes
+  promptly and on their own (the `ferric-fred` discipline), because
+  listing/scoring builds from `main`.
 
 ## Deletion & creation (what's sensitive here)
 
 **Ask before deleting or substantively rewriting:**
 
-- **The `README.md` "Design & scope" section.** It's the repo's decision history
-  now that there are no ADRs — revise a decision deliberately (and record what
-  changed), don't quietly gut it. Typo/link fixes are fine.
+- **The decision record in `CLAUDE.md` and project memories.** These are the
+  repo's decision history now that there are no ADRs — revise a decision
+  deliberately (and record what changed), don't quietly drop it.
 - **Lockfiles (`flake.lock`, `Cargo.lock`).** Regenerate through tooling
   (`nix flake update`, `cargo update`) — never hand-delete.
 - **Tracked env config (`.envrc.shared`, `.envrc.example`)** and
@@ -94,12 +95,9 @@ they can't.
 
 **When creating:**
 
-- **New design decision:** record it in the `README.md` **Design & scope**
-  section (no separate ADR file) — and in `CLAUDE.md` / a memory if it's a working
-  rule or durable context.
-- **New crate:** follow the workspace layout in the README **Design & scope**
-  section — consumers depend on the library by workspace path; keep that
+- **New design decision:** record it in `CLAUDE.md` and/or a Claude Code memory
+  (no separate ADR file, and not the user-facing README).
+- **New crate:** consumers depend on the library by workspace path; keep that
   compile-time coupling intact.
 - **New store (source or sink):** it's a concrete module for now — do **not**
-  introduce a `Store` trait to add store #2. The abstraction waits for #3/#4
-  (README **Design & scope**).
+  introduce a `Store` trait to add store #2. The abstraction waits for #3/#4.
