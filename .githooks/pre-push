@@ -1,11 +1,26 @@
 #!/usr/bin/env bash
 #
-# One-time activation reminder. `core.hooksPath` is per-clone and not carried by
-# git, so on a fresh clone the guard in .githooks/ is silently inactive until:
+# pre-push quality gate. Runs the two fast, deterministic checks CI also runs —
+# formatting and clippy — so a red CI is caught before the push, not after.
+# Mirrors the `fmt` / `clippy` gates in .github/workflows/ci.yml; keep them in
+# sync so "passes pre-push" means "passes those CI gates".
 #
-#   git config core.hooksPath .githooks
-#
-# This pre-push hook is itself only reached once that config points here, so its
-# presence in your run confirms the hooks are armed. It does no work of its own.
+# Armed per clone via core.hooksPath (`git config core.hooksPath .githooks`) —
+# reaching this hook at all confirms the hooks are wired up. If the Rust
+# toolchain isn't on PATH (e.g. outside the flake dev shell), the checks are
+# skipped with a warning rather than blocking the push; CI still gates them.
 set -euo pipefail
-exit 0
+
+if ! command -v cargo >/dev/null 2>&1; then
+  echo "pre-push: cargo not found on PATH; skipping fmt/clippy." >&2
+  echo "          (enter the dev shell or install the toolchain to enable it.)" >&2
+  exit 0
+fi
+
+echo "pre-push: cargo fmt --check…"
+cargo fmt --check
+
+echo "pre-push: cargo clippy --all-targets -- -D warnings…"
+cargo clippy --all-targets -- -D warnings
+
+echo "pre-push: fmt + clippy clean."
