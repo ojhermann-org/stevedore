@@ -3,7 +3,7 @@
 //! The library is the cargo the CLI and MCP server both carry: read secret
 //! records from a **source** store, optionally [`Plan`] the move, and write them
 //! to a **sink** store. The first route under construction is Dashlane → Proton
-//! Pass (see the repo README's Design & scope section).
+//! Pass.
 //!
 //! Two decisions shape the API:
 //!
