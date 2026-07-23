@@ -8,7 +8,7 @@ password managers and vaults. Installs the `stevedore` binary.
 $ stevedore stores
 sources: dashlane
 sinks:   proton
-routes:  dashlane -> proton (in progress, ADR-0003)
+routes:  dashlane -> proton (in progress)
 
 $ stevedore migrate --from dashlane --to proton --input export.csv
 # dry-run by default; add --apply to write. (route not implemented yet)

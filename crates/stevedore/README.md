@@ -6,8 +6,8 @@ read secret records from a **source** store, plan the move, and write them to a
 
 > Early scaffold. The source readers and sink writers are honest stubs today —
 > they return an "unimplemented" error rather than pretend to succeed — while the
-> first route (Dashlane → Proton Pass) is built. See the repo README and
-> `docs/adr/` for the design.
+> first route (Dashlane → Proton Pass) is built. See the repo README's
+> **Design & scope** section for the design.
 
 ## Shape
 
@@ -17,7 +17,7 @@ read secret records from a **source** store, plan the move, and write them to a
   username, url, note).
 - [`Plan`] — what a migration would move, computed without touching the sink.
 - `dashlane`, `proton` — the concrete source/sink modules. There is no `Store`
-  trait yet: with two stores it would be a guess (ADR-0003).
+  trait yet: with two stores it would be a guess.
 
 Licensed under either of Apache-2.0 or MIT at your option.
 

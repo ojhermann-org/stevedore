@@ -13,7 +13,7 @@ name = "stevedore"
 path = "src/main.rs"
 
 [dependencies]
-# The library, by workspace path (see ADR-0002).
+# The library, by workspace path (see the README Design & scope section).
 stevedore = { path = "../stevedore" }
 anyhow = { workspace = true }
 clap = { workspace = true }

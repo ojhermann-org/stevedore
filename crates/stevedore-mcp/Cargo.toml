@@ -12,7 +12,7 @@ readme = "README.md"
 name = "stevedore-mcp"
 path = "src/main.rs"
 
-# No dependencies yet — the tool surface is deferred (ADR-0003). When it lands,
+# No dependencies yet — the tool surface is deferred. When it lands,
 # this crate takes on `stevedore` (by path), plus `rmcp` + `tokio` for the stdio
 # server, mirroring `ferric-fred-mcp`.
 

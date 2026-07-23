@@ -3,7 +3,7 @@
 //! The library is the cargo the CLI and MCP server both carry: read secret
 //! records from a **source** store, optionally [`Plan`] the move, and write them
 //! to a **sink** store. The first route under construction is Dashlane → Proton
-//! Pass (see `docs/adr/0003-first-target-and-store-model.md`).
+//! Pass (see the repo README's Design & scope section).
 //!
 //! Two decisions shape the API:
 //!
@@ -11,7 +11,7 @@
 //!   tool must never do is leak a value into a log.
 //! - **There is no `Store` trait yet.** With two concrete stores it would be a
 //!   guess; the source and sink are concrete modules ([`dashlane`], [`proton`])
-//!   until a third or fourth reveals the real shape (ADR-0003).
+//!   until a third or fourth reveals the real shape.
 //!
 //! The source/sink functions are honest stubs for now — they report the work as
 //! unimplemented rather than pretend to succeed — so the workspace compiles and

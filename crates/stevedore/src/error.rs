@@ -3,10 +3,10 @@
 /// Errors from stevedore's source readers, sink writers, and migration planning.
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
-    #[error("reading from {store} is not implemented yet (see ADR-0003)")]
+    #[error("reading from {store} is not implemented yet")]
     SourceUnsupported { store: &'static str },
 
-    #[error("writing to {store} is not implemented yet (see ADR-0003)")]
+    #[error("writing to {store} is not implemented yet")]
     SinkUnsupported { store: &'static str },
 
     #[error("i/o error: {0}")]
