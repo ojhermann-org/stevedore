@@ -26,16 +26,12 @@ jobs:
       - name: Install Nix
         uses: DeterminateSystems/nix-installer-action@main
 
-      # Cache the Nix store (the flake dev shell — Rust toolchain + tools) across
-      # runs, keyed on the flake inputs. On a hit, the first `nix develop` (the
-      # dominant cost, ~54s cold) collapses to a store restore. Complements
-      # rust-cache below, which caches cargo build artifacts, not the toolchain.
+      # Cache the flake dev shell across runs; the cold `nix develop` dominates the job.
       - name: Cache the Nix store
         uses: nix-community/cache-nix-action@v7
         with:
           primary-key: nix-${{ runner.os }}-${{ hashFiles('flake.nix', 'flake.lock') }}
           restore-prefixes-first-match: nix-${{ runner.os }}-
-          # Keep only the current key's cache so old flake revisions don't pile up.
           purge: true
           purge-prefixes: nix-${{ runner.os }}-
           purge-created: 0
