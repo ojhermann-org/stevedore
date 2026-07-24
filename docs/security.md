@@ -58,7 +58,6 @@ Three things close this:
 
 ## What this does not cover
 
-Being precise about the boundary matters as much as the guarantees:
 
 - **Metadata is not redacted.** Titles, usernames, website addresses, file
   names, and the email address attached to a file appear in plain form. These
