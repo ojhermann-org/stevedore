@@ -36,7 +36,7 @@ in a file — exactly the artifact this tool refuses to create.
 
 ### Parser errors can't echo the input
 
-This is the subtle one. When stevedore parses the JSON a store returns, a parsing
+When stevedore parses the JSON a store returns, a parsing
 library will, on a type mismatch, put **the offending value into its error
 message** (`invalid type: string "hunter2", …`). If that error were then logged,
 the secret would leak — and the redaction above would not help, because the leak
