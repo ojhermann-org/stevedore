@@ -5,16 +5,14 @@ printed, logged, serialized, or written to disk. This document explains what tha
 
 ## What counts as a secret
 
-These are the values stevedore treats as secret and guards:
+stevedore models each source explicitly and marks certain fields of each record
+as secret **values** — the material this tool exists to protect. Everything a
+source does not mark as secret is treated as ordinary metadata.
 
-- **Passwords** on a login.
-- **Note contents.**
-- **2FA (TOTP) seeds** — carried inside a login's `otpauth://` URL. The field
-  name ends in "URL", but the seed sits in it, so it is a secret.
-- **Attachment keys** — the encryption key and download key attached to a note.
-
-Everything else a store reports — titles, usernames, website addresses, file
-names, timestamps — is treated as ordinary metadata.
+Which fields are secret is a property of each source and is listed in that
+source's own documentation (for Dashlane, see
+[the Personal notes](dcli/personal.md)). The guarantees below apply to every
+field marked secret, whatever the source.
 
 ## How a leak is prevented
 
@@ -29,10 +27,12 @@ written back out as part of a data structure.
 
 ### Values never touch the disk
 
-stevedore reads a Dashlane vault by driving Dashlane's own `dcli` tool and
-keeping the results **in memory** for the life of the run. It never asks Dashlane
-for a vault export, because an export is a plaintext copy of every secret sitting
-in a file — exactly the artifact this tool refuses to create.
+stevedore holds secret values **in memory** for the life of a run and never
+writes them to disk — no cache, no temporary file, no export. Where a source
+offers a bulk "export the vault" feature, stevedore does not use it: an export is
+a plaintext copy of every secret in a file, exactly the artifact this tool
+refuses to create. How each source is read without one is covered in that
+source's documentation.
 
 ### Parser errors can't echo the input
 
@@ -58,18 +58,14 @@ Three things close this:
 
 ## What this does not cover
 
-
-- **Metadata is not redacted.** Titles, usernames, website addresses, file
-  names, and the email address attached to a file appear in plain form. These
-  are not treated as secret values; if any are sensitive in your vault, know that
-  they are handled as ordinary data.
+- **Metadata is not redacted.** Unless identified and modeled as a secret value, fields will be treated as metadata.
 - **The store's own tool has its own behavior.** stevedore never authenticates
-  and never unlocks a vault; that is set up separately with `dcli`. How that tool
+  and never unlocks a vault; that is set up separately with each source. How that tool
   stores credentials, and what it does with the system clipboard, is outside
-  stevedore's control — see [the `dcli` notes](dcli/).
-- **Diagnostics from the store's tool are surfaced.** When `dcli` fails, its own
-  error text (for example "not logged in") is shown so you can act on it. This is
-  the tool's diagnostic channel, not the vault contents.
+  stevedore's control.
+- **Diagnostics from a source's tool are surfaced.** When a source's tool fails,
+  its own error text (for example "not logged in") is shown so you can act on it.
+  This is that tool's diagnostic channel, not the vault contents.
 
 ## Verifying it yourself
 
