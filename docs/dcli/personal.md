@@ -6,33 +6,29 @@ Follow Dashlane's
 [authentication guide](https://cli.dashlane.com/personal/authentication) to
 register your machine.
 
-## What `dcli` can reach
+## What stevedore can read
 
 🟢 available · 🔴 not available
 
-| Dashlane UI   | Via `dcli` |
-| ------------- | :--------: |
-| Logins        |     🟢     |
-| Secure notes  |     🟢     |
-| Passkeys      |     🔴     |
-| Payments      |     🔴     |
-| Personal info |     🔴     |
-| IDs           |     🔴     |
-
-`dcli` ships listers for logins (`dcli password`) and secure notes
-(`dcli note`) only.
+| Dashlane UI   | Available |
+| ------------- | :-------: |
+| Logins        |    🟢     |
+| Secure notes  |    🟢     |
+| Passkeys      |    🔴     |
+| Payments      |    🔴     |
+| Personal info |    🔴     |
+| IDs           |    🔴     |
 
 ### Logins
 
-**Extracted:** title, website address, username, password, an attached note,
-and a 2FA (TOTP) token where one is set.
+**Read:** title, website address, username, password, an attached note, and a
+2FA (TOTP) token where one is set.
 
-**Not extracted:** the collection a login belongs to.
+**Not read:** the collection a login belongs to.
 
 ### Secure notes
 
-**Extracted:** title and content. Notes marked *protected* are included —
-that setting does not restrict what `dcli` returns.
+**Read:** title and content, including notes marked *protected*.
 
-**Not extracted:** the collection a note belongs to, and attachments — an
-attached file stays in Dashlane, and only a reference to it is visible.
+**Not read:** the collection a note belongs to, and attachments — an attached
+file stays in Dashlane.

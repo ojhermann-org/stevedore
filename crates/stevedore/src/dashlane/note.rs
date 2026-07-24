@@ -7,9 +7,7 @@ use crate::secret::SecretValue;
 /// One secure note from a Dashlane vault.
 ///
 /// A note shares almost nothing with a login: no username, no url, no password.
-/// Its secret is [`Note::content`]. The two are modelled separately rather than
-/// flattened into a common shape, because no consumer has yet shown what they
-/// genuinely have in common.
+/// Its secret is [`Note::content`].
 ///
 /// As with logins, every value Dashlane emits is a string.
 #[derive(Debug, Clone, Deserialize)]

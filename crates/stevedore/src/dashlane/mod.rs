@@ -1,30 +1,21 @@
-//! Source: read a Dashlane vault through the `dcli` command-line tool.
+//! Read a Dashlane vault through Dashlane's `dcli` command-line tool.
 //!
-//! Dashlane has no public read API, so stevedore drives Dashlane's own CLI,
-//! keeping values **in-process** and access **read-only**. Nothing is exported
-//! to disk: a vault export would be a plaintext copy of every secret, which is
-//! exactly what this tool exists to avoid creating.
+//! Secret values stay in-process, vault access is read-only, and nothing is
+//! written to disk.
 //!
 //! stevedore **never authenticates**. Registering a device, entering the Master
 //! Password and passing 2FA are a one-time setup performed with `dcli` directly
-//! (see `docs/dcli/`); this module assumes an authenticated, unlocked `dcli` and
-//! refuses to run otherwise.
+//! (see `docs/dcli/`). Every call here needs an authenticated, unlocked `dcli`
+//! and fails with a clear error otherwise.
 //!
 //! # What can be read
 //!
-//! Logins ([`Login`]) and secure notes ([`Note`]) — nothing else. Dashlane
-//! stores passkeys, payments, IDs and personal info too, but `dcli` ships no
-//! command for them and they are not reachable by path either. That is a
-//! ceiling, not a missing feature. Grouping is lost for both types: logins
-//! expose no category at all, and a note's `category` never reflects Dashlane's
-//! modern Collections.
+//! Logins ([`Login`]) and secure notes ([`Note`]) — nothing else. Passkeys,
+//! payments, IDs and personal info cannot be reached. Grouping is unavailable
+//! for both types: a login carries no category, and a note's [`Note::category`]
+//! does not reflect Dashlane's Collections.
 //!
-//! # Shape of the data
-//!
-//! The two types are modelled separately and completely, exactly as `dcli`
-//! reports them. They are deliberately *not* flattened into a shared record:
-//! until a second store has been modelled with the same care, any common shape
-//! would be a guess.
+//! Note attachments can be listed but not fetched — see [`Attachment`].
 
 mod client;
 mod login;

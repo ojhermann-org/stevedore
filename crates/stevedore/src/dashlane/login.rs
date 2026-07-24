@@ -7,8 +7,7 @@ use crate::secret::SecretValue;
 /// One login from a Dashlane vault.
 ///
 /// Every field Dashlane emits is modelled, including the ones that only mean
-/// something inside Dashlane's own UI. Deciding which fields matter is a
-/// judgement no consumer has asked for yet, so nothing is dropped.
+/// something inside Dashlane's own UI.
 ///
 /// **Everything is a string.** Dashlane serialises booleans (`auto_login`),
 /// numbers (`number_use`, `strength`) and epoch timestamps
