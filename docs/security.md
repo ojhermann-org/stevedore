@@ -1,6 +1,6 @@
 # Keeping secrets safe
 
-stevedore exists to move secret *values* from one store to another. **A secret value must never leak** — never
+stevedore exists to move secret *values* from one source to another. **A secret value must never leak** — never
 printed, logged, serialized, or written to disk. This document explains what that means and how the code enforces it.
 
 ## What counts as a secret
@@ -36,7 +36,7 @@ source's documentation.
 
 ### Parser errors can't echo the input
 
-When stevedore parses the JSON a store returns, a parsing
+When stevedore parses the data a source returns, a parsing
 library will, on a type mismatch, put **the offending value into its error
 message** (`invalid type: string "hunter2", …`). If that error were then logged,
 the secret would leak — and the redaction above would not help, because the leak
@@ -44,7 +44,7 @@ happens while reading the raw text, before any `SecretValue` exists.
 
 Three things close this:
 
-1. **One gateway.** All parsing of store output goes through a single function
+1. **One gateway.** All parsing of source output goes through a single function
    (`from_json`). It is the only place allowed to hold a parser error, and it
    throws the message away, keeping only *which* field failed and the *position*
    of the failure — neither of which contains a value.
@@ -59,7 +59,7 @@ Three things close this:
 ## What this does not cover
 
 - **Metadata is not redacted.** Unless identified and modeled as a secret value, fields will be treated as metadata.
-- **The store's own tool has its own behavior.** stevedore never authenticates
+- **The source's own tool has its own behavior.** stevedore never authenticates
   and never unlocks a vault; that is set up separately with each source. How that tool
   stores credentials, and what it does with the system clipboard, is outside
   stevedore's control.
