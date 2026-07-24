@@ -11,16 +11,22 @@ server**.
 
 | Store                  | Read | Write |
 | ---------------------- | :--: | :---: |
-| [Dashlane](docs/dcli/) |  🟡  |  🔴   |
+| [Dashlane](docs/dcli/) |  🟢  |  🔴   |
+
+Dashlane reads cover logins and secure notes — everything `dcli` exposes. See
+[docs/dcli/personal.md](docs/dcli/personal.md) for what that does and doesn't
+include.
 
 ## What it is (and isn't)
 
 - **A mover.** stevedore _migrates_ secret values from a source store to a sink
-  store.
+  store. Stores are modelled one at a time, precisely and on their own terms;
+  moving between them waits until there are two.
 - **Not a resolver.** Runtime secret _resolution_ — an app fetching its own key
   at start-up — is what [secretspec](https://github.com/cachix/secretspec) does.
-- **Safe by default.** Secret values redact themselves in logs by construction,
-  and `migrate` is a dry-run unless you pass `--apply`.
+- **Safe by default.** Secret values redact themselves in logs by construction —
+  passwords, note contents, 2FA seeds and attachment keys alike — and nothing is
+  ever exported to disk.
 
 ## Layout
 
