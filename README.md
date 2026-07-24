@@ -1,9 +1,8 @@
 # stevedore
 
 A stevedore moves cargo between vessels; `stevedore` moves **secrets** between
-stores — reading them out of one and writing them into another. It's a Rust
-workspace with three deliverables: a **library**, a **CLI**, and an **MCP
-server**.
+stores. It's a Rust workspace with three crates: a **library**, a **CLI**, and
+an **MCP server**.
 
 ## Stores
 
@@ -11,7 +10,7 @@ server**.
 
 | Store                  | Read | Write |
 | ---------------------- | :--: | :---: |
-| [Dashlane](docs/dcli/) |  🟡  |  🔴   |
+| [Dashlane](docs/dcli/) |  🟢  |  🔴   |
 
 ## What it is (and isn't)
 
@@ -19,16 +18,18 @@ server**.
   store.
 - **Not a resolver.** Runtime secret _resolution_ — an app fetching its own key
   at start-up — is what [secretspec](https://github.com/cachix/secretspec) does.
-- **Safe by default.** Secret values redact themselves in logs by construction,
-  and `migrate` is a dry-run unless you pass `--apply`.
+- **Safe by default.** Secret values redact themselves in logs by construction —
+  passwords, note contents, 2FA seeds and attachment keys alike — and nothing is
+  ever exported to disk. See [Keeping secrets safe](docs/security.md) for how
+  that guarantee is enforced.
 
 ## Layout
 
-| Crate                                          | What it is               |
-| ---------------------------------------------- | ------------------------ |
-| [`crates/stevedore`](crates/stevedore)         | The core library.        |
-| [`crates/stevedore-cli`](crates/stevedore-cli) | The command-line binary. |
-| [`crates/stevedore-mcp`](crates/stevedore-mcp) | The MCP server.          |
+| Crate                                                              | What it is               |
+| ------------------------------------------------------------------ | ------------------------ |
+| [`crates/stevedore-secrets`](crates/stevedore-secrets)             | The core library.        |
+| [`crates/stevedore-secrets-cli`](crates/stevedore-secrets-cli)     | The command-line binary. |
+| [`crates/stevedore-secrets-mcp`](crates/stevedore-secrets-mcp)     | The MCP server.          |
 
 ## Develop
 
@@ -46,7 +47,7 @@ nix develop
 # then, the usual loop:
 cargo test
 cargo clippy --all-targets -- -D warnings
-cargo run -p stevedore-cli -- stores
+cargo run -p stevedore-secrets-cli -- stores
 ```
 
 CI runs `fmt`, `clippy`, `test`, and `cargo deny check` through the same flake.

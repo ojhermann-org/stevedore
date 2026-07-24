@@ -14,7 +14,9 @@ create *in this repo*; the global config only guards universal catastrophes.
 ## The one rule that's non-negotiable: never leak a secret value
 
 This tool exists to handle secret *values*. Everything else is secondary to not
-spilling them.
+spilling them. The user-facing explanation of how this is enforced lives in
+[`docs/security.md`](docs/security.md); keep it current when the mechanisms
+change.
 
 - **Never print, log, or commit a secret value.** `SecretValue` redacts itself in
   `Debug`/`Display` by construction — don't add a code path that calls `.expose()`
@@ -31,7 +33,15 @@ spilling them.
 
 Documentation is part of the change, not a follow-up. Before opening a PR, check
 whether it touches user-facing behavior, the public API, or a design decision,
-and update the affected docs in the same PR:
+and update the affected docs in the same PR.
+
+**User-facing docs carry no developer notes.** The workspace and per-crate
+`README.md`s, `docs/`, rustdoc, and `--help` are clear, succinct, and
+*exclusively* about what stevedore offers and how to use it. Keep design
+rationale, project sequencing, what a thing "waits for", and which external
+subcommands get invoked internally out of them — that belongs in this file or a
+memory. When a fact is useful but reads as rationale, keep the fact and cut the
+reasoning: say attachments cannot be read, not why.
 
 - **Workspace `README.md`** and **per-crate `README.md`** — usage, the store/route
   table, status.
@@ -40,7 +50,11 @@ and update the affected docs in the same PR:
   descriptions** — these *are* the docs for those surfaces.
 - **Store CLI docs (`docs/dcli/`)** — how a user sets up an external store CLI
   stevedore drives. These track a third-party tool that drifts, so keep them tight
-  and defer the canonical flow to the vendor's own docs.
+  and defer the canonical flow to the vendor's own docs. Name a store CLI's
+  subcommands **in full** everywhere — docs, code, commit messages — so
+  `dcli password`, never `dcli p`. The short aliases are incomplete (`secret`,
+  `status`, and `read` have none), so full names are the only convention that
+  applies uniformly.
 - **Design decisions** — this repo keeps **no separate decision log (no ADRs)**,
   and the `README.md` is **user-facing**, not a decision record. A non-trivial
   design/process decision goes into `CLAUDE.md` (working rules) and/or a Claude
@@ -49,19 +63,20 @@ and update the affected docs in the same PR:
 
 ## Comments: let the code speak first
 
-Keep comments minimal and purposeful. The **code, tests, and documentation**
-should carry the meaning; a comment earns its place only when it adds something
-they can't.
+Comments are used **only when strictly necessary**, and then they are succinct.
+The **code, tests, and documentation** carry the meaning; a comment earns its
+place only when it adds something they can't, in as few words as possible.
 
-- **Doc comments (`///`, `//!`) stay** — they're the documentation surface
-  (rustdoc, docs.rs, `--help`). Keep them, but tight.
 - **Cut narration.** Don't restate what the next line plainly does. Reach first
-  for a clearer name, a smaller function, or a test — not a comment that explains
-  code that could explain itself.
-- **Keep the "why."** A comment capturing non-obvious *intent* — a constraint, a
-  footgun, the reason behind a choice (e.g. the `SecretValue` redaction contract,
-  the `ci`-job-name-must-match-the-check note) — is exactly what belongs in a
-  comment, because it isn't recoverable from the code.
+  for a clearer name, a smaller function, or a test — not a comment.
+- **Keep the "why," but tight.** A non-obvious constraint or footgun (the
+  `SecretValue` redaction contract; discarding serde's message because it quotes
+  a secret) is worth a comment — one or two lines, not a paragraph. If the why is
+  design rationale or project sequencing rather than a footgun at that line, it
+  belongs in this file or a memory, not the source.
+- **Doc comments (`///`, `//!`) describe the API and data, tightly.** They're the
+  docs.rs / `--help` surface, so they stay — but they say what a type or field
+  *is*, not why the design went the way it did. No rationale essays.
 
 ## Repo & release conventions
 
@@ -75,6 +90,11 @@ they can't.
 - **Nothing is published yet.** Every crate is `publish = false`. Cutting a
   release — flipping that, versioning, tagging, wiring release-plz / crates.io —
   is the owner's call, not ordinary development.
+- **Crate names are chosen; binary names differ.** The bare `stevedore` name is
+  taken on crates.io, so crates publish as `stevedore-secrets` (lib, imported as
+  `stevedore_secrets`), `stevedore-secrets-cli`, and `stevedore-secrets-mcp`.
+  The **binaries stay `stevedore` and `stevedore-mcp`** via `[[bin]] name` — the
+  command a user types is independent of the crate name. Keep them that way.
 - **The MCP surface is deferred.** When it lands, release MCP-surface changes
   promptly and on their own (the `ferric-fred` discipline), because
   listing/scoring builds from `main`.

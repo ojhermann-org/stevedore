@@ -1,5 +1,5 @@
 [package]
-name = "stevedore"
+name = "stevedore-secrets"
 description = "Move secrets between password managers and vaults — the core library."
 version = "0.0.0"
 publish = false
@@ -12,6 +12,8 @@ categories = ["command-line-utilities", "cryptography"]
 
 [dependencies]
 thiserror = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
 
 [lints]
 workspace = true
