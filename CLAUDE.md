@@ -31,7 +31,15 @@ spilling them.
 
 Documentation is part of the change, not a follow-up. Before opening a PR, check
 whether it touches user-facing behavior, the public API, or a design decision,
-and update the affected docs in the same PR:
+and update the affected docs in the same PR.
+
+**User-facing docs carry no developer notes.** The workspace and per-crate
+`README.md`s, `docs/`, rustdoc, and `--help` are clear, succinct, and
+*exclusively* about what stevedore offers and how to use it. Keep design
+rationale, project sequencing, what a thing "waits for", and which external
+subcommands get invoked internally out of them — that belongs in this file or a
+memory. When a fact is useful but reads as rationale, keep the fact and cut the
+reasoning: say attachments cannot be read, not why.
 
 - **Workspace `README.md`** and **per-crate `README.md`** — usage, the store/route
   table, status.
