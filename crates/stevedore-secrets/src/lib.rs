@@ -11,5 +11,5 @@ pub mod dashlane;
 pub mod error;
 pub mod secret;
 
-pub use error::{Error, Result};
+pub use error::{CliError, Error, Result};
 pub use secret::SecretValue;

@@ -5,7 +5,7 @@ use std::process::{Command, Stdio};
 
 use serde::de::DeserializeOwned;
 
-use crate::error::{Error, Result};
+use crate::error::{CliError, Error, Result};
 
 /// The external CLI stevedore drives. It must already be registered and
 /// unlocked — stevedore never authenticates. See `docs/dcli/`.
@@ -24,7 +24,7 @@ pub struct Status {
 ///
 /// # Errors
 ///
-/// [`Error::CliMissing`] when `dcli` isn't installed, or [`Error::CliFailed`].
+/// [`CliError::NotFound`] when `dcli` isn't installed, or [`CliError::Failed`].
 pub fn status() -> Result<Status> {
     let out = run(&["status"])?;
     let mut status = Status {
@@ -47,7 +47,7 @@ pub fn status() -> Result<Status> {
 ///
 /// # Errors
 ///
-/// [`Error::CliNotLoggedIn`] if the vault isn't ready, or [`Error::CliFailed`].
+/// [`Error::NotAuthenticated`] if the vault isn't ready, or [`CliError::Failed`].
 pub fn sync() -> Result<()> {
     ready()?;
     run(&["sync"]).map(|_| ())
@@ -57,8 +57,8 @@ pub fn sync() -> Result<()> {
 ///
 /// # Errors
 ///
-/// [`Error::CliNotLoggedIn`], [`Error::CliLocked`], [`Error::CliFailed`], or
-/// [`Error::CliOutput`] if the response isn't the expected shape.
+/// [`Error::NotAuthenticated`], [`Error::Locked`], [`CliError::Failed`], or
+/// [`Error::Unparsable`] if the response isn't the expected shape.
 pub fn logins() -> Result<Vec<super::Login>> {
     list(&["password", "-o", "json"], "logins")
 }
@@ -75,10 +75,7 @@ pub fn notes() -> Result<Vec<super::Note>> {
 fn list<T: DeserializeOwned>(args: &[&str], field: &'static str) -> Result<Vec<T>> {
     ready()?;
     let out = run(args)?;
-    serde_json::from_str(&out).map_err(|_| Error::CliOutput {
-        program: DCLI,
-        field,
-    })
+    serde_json::from_str(&out).map_err(|_| Error::Unparsable { what: field })
 }
 
 /// Refuse to run against a vault that can't answer.
@@ -88,10 +85,10 @@ fn list<T: DeserializeOwned>(args: &[&str], field: &'static str) -> Result<Vec<T
 fn ready() -> Result<()> {
     let status = status()?;
     if !status.logged_in {
-        return Err(Error::CliNotLoggedIn { program: DCLI });
+        return Err(Error::NotAuthenticated);
     }
     if status.locked {
-        return Err(Error::CliLocked { program: DCLI });
+        return Err(Error::Locked);
     }
     Ok(())
 }
@@ -103,26 +100,24 @@ fn run(args: &[&str]) -> Result<String> {
         .stdin(Stdio::null())
         .output()
         .map_err(|e| match e.kind() {
-            ErrorKind::NotFound => Error::CliMissing { program: DCLI },
+            ErrorKind::NotFound => CliError::NotFound { program: DCLI }.into(),
             _ => Error::Io(e),
         })?;
 
     if !output.status.success() {
-        return Err(Error::CliFailed {
+        return Err(CliError::Failed {
             program: DCLI,
             args: args.join(" "),
             status: output.status.to_string(),
             stderr: strip_ansi(&String::from_utf8_lossy(&output.stderr))
                 .trim()
                 .to_owned(),
-        });
+        }
+        .into());
     }
 
     // stdout is a plaintext vault dump: never log it or attach it to an error.
-    String::from_utf8(output.stdout).map_err(|_| Error::CliOutput {
-        program: DCLI,
-        field: "output",
-    })
+    String::from_utf8(output.stdout).map_err(|_| Error::Unparsable { what: "output" })
 }
 
 /// Remove ANSI escape sequences, which `dcli` writes into its error messages.

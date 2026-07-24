@@ -1,35 +1,45 @@
 //! The library's error type.
 
-/// Errors from stevedore's source readers.
+/// A failure reading from or writing to a store.
+///
+/// These are store-neutral: any store can be unauthenticated, locked, return
+/// data stevedore can't parse, or fail on I/O. Failures particular to *how* a
+/// store is driven live in their own types — see [`CliError`] for stores driven
+/// through an external command-line tool.
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
-    #[error("`{program}` was not found on PATH — see docs/dcli/ for setup")]
-    CliMissing { program: &'static str },
+    #[error("the store is not authenticated")]
+    NotAuthenticated,
 
-    #[error("`{program}` is not logged in — see docs/dcli/ for setup")]
-    CliNotLoggedIn { program: &'static str },
+    #[error("the store is locked")]
+    Locked,
 
-    #[error("the `{program}` vault is locked — unlock it and try again")]
-    CliLocked { program: &'static str },
+    // The message names only what failed to parse, never the parser's own
+    // error: serde_json quotes the offending value on a type mismatch, and that
+    // value can be a secret.
+    #[error("could not parse the {what} the store returned")]
+    Unparsable { what: &'static str },
+
+    #[error(transparent)]
+    Cli(#[from] CliError),
+
+    #[error("i/o error: {0}")]
+    Io(#[from] std::io::Error),
+}
+
+/// A failure driving an external command-line tool a store is read through.
+#[derive(Debug, thiserror::Error)]
+pub enum CliError {
+    #[error("`{program}` was not found on PATH")]
+    NotFound { program: &'static str },
 
     #[error("`{program} {args}` failed ({status}): {stderr}")]
-    CliFailed {
+    Failed {
         program: &'static str,
         args: String,
         status: String,
         stderr: String,
     },
-
-    // No #[source] or {0}: serde_json quotes the offending value on a type
-    // mismatch, and that value can be a secret.
-    #[error("could not parse the {field} that `{program}` returned")]
-    CliOutput {
-        program: &'static str,
-        field: &'static str,
-    },
-
-    #[error("i/o error: {0}")]
-    Io(#[from] std::io::Error),
 }
 
 pub type Result<T> = std::result::Result<T, Error>;
