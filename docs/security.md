@@ -1,10 +1,7 @@
 # Keeping secrets safe
 
-stevedore exists to move secret *values* from one store to another. The single
-rule everything else serves is: **a secret value must never leak** — never
-printed, logged, serialized, or written to disk. This document explains what
-that means and how the code enforces it, so you can trust the tool and verify
-the claim yourself.
+stevedore exists to move secret *values* from one store to another. **A secret value must never leak** — never
+printed, logged, serialized, or written to disk. This document explains what that means and how the code enforces it.
 
 ## What counts as a secret
 
