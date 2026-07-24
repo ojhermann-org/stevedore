@@ -14,7 +14,9 @@ create *in this repo*; the global config only guards universal catastrophes.
 ## The one rule that's non-negotiable: never leak a secret value
 
 This tool exists to handle secret *values*. Everything else is secondary to not
-spilling them.
+spilling them. The user-facing explanation of how this is enforced lives in
+[`docs/security.md`](docs/security.md); keep it current when the mechanisms
+change.
 
 - **Never print, log, or commit a secret value.** `SecretValue` redacts itself in
   `Debug`/`Display` by construction — don't add a code path that calls `.expose()`

@@ -168,6 +168,23 @@ mod tests {
     }
 
     #[test]
+    fn a_malformed_attachment_never_echoes_its_contents() {
+        // localSize is an integer; a string value forces serde_json to quote it.
+        // The custom deserializer must discard that message, not forward it —
+        // the value could be a real cryptoKey.
+        let json = r#"{"id":"{A}","attachments":"[{\"localSize\":\"SEKRET-MARKER\"}]"}"#;
+        let err = serde_json::from_str::<Note>(json).unwrap_err();
+        assert!(
+            !format!("{err}").contains("SEKRET-MARKER"),
+            "Display: {err}"
+        );
+        assert!(
+            !format!("{err:?}").contains("SEKRET-MARKER"),
+            "Debug: {err:?}"
+        );
+    }
+
+    #[test]
     fn a_missing_attachment_field_parses() {
         let n: Note = serde_json::from_str(r#"{"id":"{A}"}"#).unwrap();
         assert!(n.attachments.is_empty());

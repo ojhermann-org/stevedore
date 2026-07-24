@@ -20,7 +20,8 @@ an **MCP server**.
   at start-up — is what [secretspec](https://github.com/cachix/secretspec) does.
 - **Safe by default.** Secret values redact themselves in logs by construction —
   passwords, note contents, 2FA seeds and attachment keys alike — and nothing is
-  ever exported to disk.
+  ever exported to disk. See [Keeping secrets safe](docs/security.md) for how
+  that guarantee is enforced.
 
 ## Layout
 

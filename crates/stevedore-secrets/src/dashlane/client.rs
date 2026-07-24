@@ -27,12 +27,13 @@ pub struct Status {
 /// [`CliError::NotFound`] when `dcli` isn't installed, or [`CliError::Failed`].
 pub fn status() -> Result<Status> {
     let out = run(&["status"])?;
+    let text = String::from_utf8_lossy(&out);
     let mut status = Status {
         logged_in: false,
         locked: false,
         login: None,
     };
-    for line in out.lines() {
+    for line in text.lines() {
         match line.split_once(':').map(|(k, v)| (k.trim(), v.trim())) {
             Some(("Logged in", v)) => status.logged_in = v == "yes",
             Some(("Locked", v)) => status.locked = v == "yes",
@@ -75,7 +76,7 @@ pub fn notes() -> Result<Vec<super::Note>> {
 fn list<T: DeserializeOwned>(args: &[&str], field: &'static str) -> Result<Vec<T>> {
     ready()?;
     let out = run(args)?;
-    serde_json::from_str(&out).map_err(|_| Error::Unparsable { what: field })
+    crate::error::from_json(&out, field)
 }
 
 /// Refuse to run against a vault that can't answer.
@@ -93,7 +94,7 @@ fn ready() -> Result<()> {
     Ok(())
 }
 
-fn run(args: &[&str]) -> Result<String> {
+fn run(args: &[&str]) -> Result<Vec<u8>> {
     let output = Command::new(DCLI)
         .args(args)
         // Closed stdin makes dcli's auth prompt fail cleanly instead of hanging.
@@ -117,7 +118,7 @@ fn run(args: &[&str]) -> Result<String> {
     }
 
     // stdout is a plaintext vault dump: never log it or attach it to an error.
-    String::from_utf8(output.stdout).map_err(|_| Error::Unparsable { what: "output" })
+    Ok(output.stdout)
 }
 
 /// Remove ANSI escape sequences, which `dcli` writes into its error messages.
