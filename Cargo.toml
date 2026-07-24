@@ -1,9 +1,9 @@
 [workspace]
 resolver = "2"
 members = [
-    "crates/stevedore",
-    "crates/stevedore-cli",
-    "crates/stevedore-mcp",
+    "crates/stevedore-secrets",
+    "crates/stevedore-secrets-cli",
+    "crates/stevedore-secrets-mcp",
 ]
 
 # Shared metadata, dependency versions, and lints, inherited by every member

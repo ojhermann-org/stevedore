@@ -196,7 +196,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "stevedore"
+name = "stevedore-secrets"
 version = "0.0.0"
 dependencies = [
  "serde",
@@ -205,16 +205,16 @@ dependencies = [
 ]
 
 [[package]]
-name = "stevedore-cli"
+name = "stevedore-secrets-cli"
 version = "0.0.0"
 dependencies = [
  "anyhow",
  "clap",
- "stevedore",
+ "stevedore-secrets",
 ]
 
 [[package]]
-name = "stevedore-mcp"
+name = "stevedore-secrets-mcp"
 version = "0.0.0"
 
 [[package]]

@@ -24,7 +24,7 @@ fn main() -> Result<()> {
     let cli = Cli::parse();
     match cli.command {
         Command::Stores => {
-            println!("sources: {}", stevedore::dashlane::NAME);
+            println!("sources: {}", stevedore_secrets::dashlane::NAME);
             println!("sinks:   (none yet)");
         }
     }

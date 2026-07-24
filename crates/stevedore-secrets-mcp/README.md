@@ -1,4 +1,4 @@
-# stevedore-mcp
+# stevedore-secrets-mcp
 
 An MCP (Model Context Protocol) server exposing
 [`stevedore`](https://github.com/ojhermann-org/stevedore)'s secret-migration

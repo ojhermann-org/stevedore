@@ -24,11 +24,11 @@ an **MCP server**.
 
 ## Layout
 
-| Crate                                          | What it is               |
-| ---------------------------------------------- | ------------------------ |
-| [`crates/stevedore`](crates/stevedore)         | The core library.        |
-| [`crates/stevedore-cli`](crates/stevedore-cli) | The command-line binary. |
-| [`crates/stevedore-mcp`](crates/stevedore-mcp) | The MCP server.          |
+| Crate                                                              | What it is               |
+| ------------------------------------------------------------------ | ------------------------ |
+| [`crates/stevedore-secrets`](crates/stevedore-secrets)             | The core library.        |
+| [`crates/stevedore-secrets-cli`](crates/stevedore-secrets-cli)     | The command-line binary. |
+| [`crates/stevedore-secrets-mcp`](crates/stevedore-secrets-mcp)     | The MCP server.          |
 
 ## Develop
 
@@ -46,7 +46,7 @@ nix develop
 # then, the usual loop:
 cargo test
 cargo clippy --all-targets -- -D warnings
-cargo run -p stevedore-cli -- stores
+cargo run -p stevedore-secrets-cli -- stores
 ```
 
 CI runs `fmt`, `clippy`, `test`, and `cargo deny check` through the same flake.

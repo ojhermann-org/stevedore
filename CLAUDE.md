@@ -88,6 +88,11 @@ place only when it adds something they can't, in as few words as possible.
 - **Nothing is published yet.** Every crate is `publish = false`. Cutting a
   release — flipping that, versioning, tagging, wiring release-plz / crates.io —
   is the owner's call, not ordinary development.
+- **Crate names are chosen; binary names differ.** The bare `stevedore` name is
+  taken on crates.io, so crates publish as `stevedore-secrets` (lib, imported as
+  `stevedore_secrets`), `stevedore-secrets-cli`, and `stevedore-secrets-mcp`.
+  The **binaries stay `stevedore` and `stevedore-mcp`** via `[[bin]] name` — the
+  command a user types is independent of the crate name. Keep them that way.
 - **The MCP surface is deferred.** When it lands, release MCP-surface changes
   promptly and on their own (the `ferric-fred` discipline), because
   listing/scoring builds from `main`.

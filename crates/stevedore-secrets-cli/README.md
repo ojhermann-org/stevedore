@@ -1,4 +1,4 @@
-# stevedore-cli
+# stevedore-secrets-cli
 
 The command-line interface for
 [`stevedore`](https://github.com/ojhermann-org/stevedore) — move secrets between

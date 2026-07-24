@@ -1,5 +1,5 @@
 [package]
-name = "stevedore-mcp"
+name = "stevedore-secrets-mcp"
 description = "MCP server exposing stevedore's secret-migration tools (scaffold)."
 version = "0.0.0"
 publish = false
@@ -12,9 +12,7 @@ readme = "README.md"
 name = "stevedore-mcp"
 path = "src/main.rs"
 
-# No dependencies yet — the tool surface is deferred. When it lands,
-# this crate takes on `stevedore` (by path), plus `rmcp` + `tokio` for the stdio
-# server, mirroring `ferric-fred-mcp`.
+# No dependencies yet — the tool surface is deferred.
 
 [lints]
 workspace = true

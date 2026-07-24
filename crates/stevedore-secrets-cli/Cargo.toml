@@ -1,5 +1,5 @@
 [package]
-name = "stevedore-cli"
+name = "stevedore-secrets-cli"
 description = "Command-line interface for stevedore — move secrets between password managers and vaults."
 version = "0.0.0"
 publish = false
@@ -13,8 +13,7 @@ name = "stevedore"
 path = "src/main.rs"
 
 [dependencies]
-# The library, by workspace path.
-stevedore = { path = "../stevedore" }
+stevedore-secrets = { path = "../stevedore-secrets" }
 anyhow = { workspace = true }
 clap = { workspace = true }
 

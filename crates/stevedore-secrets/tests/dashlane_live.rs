@@ -15,7 +15,7 @@
 //! **No secret value is ever printed.** Counts and presence flags only. The
 //! redaction check compares against live secrets without ever emitting one.
 
-use stevedore::dashlane;
+use stevedore_secrets::dashlane;
 
 #[test]
 #[ignore = "needs an authenticated dcli and a real vault"]
