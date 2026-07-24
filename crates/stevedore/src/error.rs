@@ -20,11 +20,8 @@ pub enum Error {
         stderr: String,
     },
 
-    // This message deliberately drops the parser's own error. serde_json reports
-    // the offending *value* on a type mismatch — `invalid type: string
-    // "hunter2"` — so forwarding it would spill a password into whatever logs
-    // the error. A caller gets the field name and nothing more. Do not "improve"
-    // this by adding #[source] or {0}.
+    // No #[source] or {0}: serde_json quotes the offending value on a type
+    // mismatch, and that value can be a secret.
     #[error("could not parse the {field} that `{program}` returned")]
     CliOutput {
         program: &'static str,

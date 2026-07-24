@@ -6,16 +6,13 @@ use serde::Deserialize;
 
 /// A secret value that never reveals itself through `Debug` or `Display`.
 ///
-/// Since this tool's whole job is moving secret *values*, the value type is
-/// redacting by construction: logging a record that contains one can't spill it.
-/// Read the bytes deliberately — and greppably — with [`SecretValue::expose`].
+/// This tool's job is moving secret *values*, so the value type redacts by
+/// construction: logging a record that holds one can't spill it. Read the bytes
+/// deliberately — and greppably — with [`SecretValue::expose`].
 ///
-/// This is the one type shared across sources. It isn't a guess at what stores
-/// have in common; it encodes the safety rule, which is the same everywhere.
-///
-/// `Deserialize` is derived so a source can parse straight into a redacting
-/// type, never through an intermediate `String`. `Serialize` is deliberately
-/// **not** implemented — a secret should never be written out by accident.
+/// `Deserialize` is derived so a source parses straight into a redacting type,
+/// never through an intermediate `String`. `Serialize` is deliberately not
+/// implemented, so a secret is never written out by accident.
 #[derive(Clone, PartialEq, Eq, Deserialize)]
 #[serde(transparent)]
 pub struct SecretValue(String);

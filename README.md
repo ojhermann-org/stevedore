@@ -1,9 +1,8 @@
 # stevedore
 
 A stevedore moves cargo between vessels; `stevedore` moves **secrets** between
-stores — reading them out of one and writing them into another. It's a Rust
-workspace with three deliverables: a **library**, a **CLI**, and an **MCP
-server**.
+stores. It's a Rust workspace with three crates: a **library**, a **CLI**, and
+an **MCP server**.
 
 ## Stores
 

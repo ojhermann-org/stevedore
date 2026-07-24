@@ -58,8 +58,7 @@ fn reads_a_real_vault_without_leaking_it() {
         assert!(!note.id.is_empty(), "every note carries an id");
     }
 
-    // Redaction, checked against real secrets rather than fixtures. The failure
-    // messages name the record's id, never the value that leaked.
+    // Redaction against real secrets; failures name the id, never the value.
     for login in &logins {
         let shown = format!("{login:?}");
         for (field, secret) in [

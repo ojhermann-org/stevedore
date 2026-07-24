@@ -61,19 +61,20 @@ reasoning: say attachments cannot be read, not why.
 
 ## Comments: let the code speak first
 
-Keep comments minimal and purposeful. The **code, tests, and documentation**
-should carry the meaning; a comment earns its place only when it adds something
-they can't.
+Comments are used **only when strictly necessary**, and then they are succinct.
+The **code, tests, and documentation** carry the meaning; a comment earns its
+place only when it adds something they can't, in as few words as possible.
 
-- **Doc comments (`///`, `//!`) stay** — they're the documentation surface
-  (rustdoc, docs.rs, `--help`). Keep them, but tight.
 - **Cut narration.** Don't restate what the next line plainly does. Reach first
-  for a clearer name, a smaller function, or a test — not a comment that explains
-  code that could explain itself.
-- **Keep the "why."** A comment capturing non-obvious *intent* — a constraint, a
-  footgun, the reason behind a choice (e.g. the `SecretValue` redaction contract,
-  the `ci`-job-name-must-match-the-check note) — is exactly what belongs in a
-  comment, because it isn't recoverable from the code.
+  for a clearer name, a smaller function, or a test — not a comment.
+- **Keep the "why," but tight.** A non-obvious constraint or footgun (the
+  `SecretValue` redaction contract; discarding serde's message because it quotes
+  a secret) is worth a comment — one or two lines, not a paragraph. If the why is
+  design rationale or project sequencing rather than a footgun at that line, it
+  belongs in this file or a memory, not the source.
+- **Doc comments (`///`, `//!`) describe the API and data, tightly.** They're the
+  docs.rs / `--help` surface, so they stay — but they say what a type or field
+  *is*, not why the design went the way it did. No rationale essays.
 
 ## Repo & release conventions
 

@@ -4,26 +4,20 @@ use serde::Deserialize;
 
 use crate::secret::SecretValue;
 
-/// One login from a Dashlane vault.
+/// One login from a Dashlane vault, with every field Dashlane emits.
 ///
-/// Every field Dashlane emits is modelled, including the ones that only mean
-/// something inside Dashlane's own UI.
+/// Every value is a JSON string — booleans, numbers and epoch timestamps
+/// included — so all are modelled as strings and left unparsed. Only [`id`] is
+/// guaranteed present; every other field is optional, `title` and `url`
+/// included.
 ///
-/// **Everything is a string.** Dashlane serialises booleans (`auto_login`),
-/// numbers (`number_use`, `strength`) and epoch timestamps
-/// (`creation_datetime`) all as JSON strings, so they are modelled as strings
-/// and left unparsed. Typing `auto_login` as `bool` fails to deserialize.
-///
-/// Only [`Login::id`] is guaranteed present; every other field is optional
-/// because real vaults omit them — `title` and `url` included.
+/// [`id`]: Login::id
 #[derive(Debug, Clone, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Login {
-    /// Dashlane's identifier, unique per record and present on every one.
+    /// Dashlane's per-record identifier, present on every one.
     ///
-    /// Emitted wrapped in braces (`{D47734C4-…}`). A `dl://` path only resolves
-    /// with the braces **stripped**, so this value cannot be pasted into one
-    /// unchanged — see [`Login::bare_id`].
+    /// Emitted in braces (`{D47734C4-…}`); see [`Login::bare_id`].
     pub id: String,
 
     pub title: Option<String>,
@@ -41,24 +35,15 @@ pub struct Login {
 
     /// A 2FA token as an `otpauth://` URI, when the login has one.
     ///
-    /// **Secret material despite the name.** The TOTP seed sits in the query
-    /// string, so this is redacted like a password — anything that logs "just
-    /// the URL fields" would otherwise leak a second factor.
-    ///
-    /// Dashlane's form is non-standard in two ways worth knowing before anyone
-    /// hands it to another tool: the label is **empty**
-    /// (`otpauth://totp/?secret=…` rather than `otpauth://totp/Issuer:account?…`),
-    /// and it carries a Dashlane-specific `lock` parameter. The seed also comes
-    /// back lower-cased, which is legal base32 but not universally accepted.
+    /// Secret material despite the name — the TOTP seed is in the query string,
+    /// so it is redacted. Dashlane's form is non-standard: empty label, a `lock`
+    /// parameter, and a lower-cased seed.
     pub otp_url: Option<SecretValue>,
 
-    /// Free-text note attached to the login. Redacted: users keep recovery
-    /// codes and secondary passwords here.
+    /// Free-text note attached to the login. Redacted.
     pub note: Option<SecretValue>,
 
-    // No `category` field exists on a login. Dashlane stores login categories
-    // (and Collections) elsewhere and `dcli` exposes neither, so a login's
-    // grouping is simply not readable — don't add a field hoping it appears.
+    // dcli exposes no category on a login; don't add a field hoping it appears.
     pub status: Option<String>,
     pub strength: Option<String>,
     pub is_favorite: Option<String>,
@@ -69,10 +54,8 @@ pub struct Login {
     pub anon_id: Option<String>,
     pub locale_format: Option<String>,
 
-    /// Nested JSON *inside* a JSON string, e.g. `"{\"associated_domains\":[]}"`.
-    ///
-    /// Left as the raw string on purpose: the only example ever observed was
-    /// empty, so parsing it would mean inventing a shape from no evidence.
+    /// Nested JSON inside a JSON string (e.g. `"{\"associated_domains\":[]}"`),
+    /// left unparsed.
     pub linked_services: Option<String>,
 
     pub creation_datetime: Option<String>,
@@ -85,9 +68,8 @@ pub struct Login {
 impl Login {
     /// The id with Dashlane's surrounding braces removed.
     ///
-    /// `dcli read dl://<id>/…` rejects the braced form and reports the record as
-    /// missing rather than malformed, which reads as data loss. Filters
-    /// (`dcli password id=…`) accept either.
+    /// A `dl://<id>` path rejects the braced form; `dcli password id=…` accepts
+    /// either.
     pub fn bare_id(&self) -> &str {
         self.id.trim_start_matches('{').trim_end_matches('}')
     }

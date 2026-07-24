@@ -23,9 +23,6 @@ enum Command {
 fn main() -> Result<()> {
     let cli = Cli::parse();
     match cli.command {
-        // Moving secrets needs a source and a sink. Dashlane is modelled; the
-        // second store isn't, so there is no route to offer yet and no `migrate`
-        // command that could honestly succeed.
         Command::Stores => {
             println!("sources: {}", stevedore::dashlane::NAME);
             println!("sinks:   (none yet)");
