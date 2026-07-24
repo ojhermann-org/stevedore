@@ -11,6 +11,25 @@ These rules layer on top of the global permission model (auto mode + classifier)
 Their job is to tell the classifier what counts as **"important"** to delete or
 create *in this repo*; the global config only guards universal catastrophes.
 
+## Vocabulary: store, source, sink
+
+Three deliberately distinct words — don't collapse them:
+
+- **store** — the general noun for a password manager or vault stevedore talks
+  to (Dashlane, Proton Pass, …). Use it in **role-neutral** contexts: the error
+  type (`error.rs` is "store-neutral" because it serves both reading and
+  writing), the CLI `stores` listing, the README's Stores table.
+- **source** — a store in the **read** role (stevedore reads secrets *from* it).
+  Use it for read-side prose — e.g. `docs/security.md` is about reading, so it
+  says "source".
+- **sink** — a store in the **write** role (stevedore writes secrets *to* it).
+
+`source`/`sink` are the two *roles*; `store` is the umbrella. A blanket
+find-and-replace of one for another is wrong: "the store is not authenticated"
+must stay `store` because a sink can need auth too, while a doc about reading
+should say `source`. Match the word to whether the context is reading, writing,
+or neutral.
+
 ## The one rule that's non-negotiable: never leak a secret value
 
 This tool exists to handle secret *values*. Everything else is secondary to not
