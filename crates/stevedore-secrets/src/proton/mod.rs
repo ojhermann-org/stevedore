@@ -18,13 +18,22 @@
 //! A login carries a title, username, email, password, TOTP URI and URLs —
 //! Proton's item template offers no field for a note attached to a login, so
 //! that text has nowhere to go.
+//!
+//! # What can be read
+//!
+//! [`items`] describes what a vault already holds — each [`Item`]'s title, [`Kind`]
+//! and [`State`]. Descriptions only: `pass-cli` yields item contents just for
+//! `--show-secrets`, which stevedore never passes. Proton Pass is a sink, so no
+//! secret is read out of it.
 
 mod client;
 mod item;
+mod listing;
 mod vault;
 
-pub use client::{create_login, create_note, session, vault, vaults, Session};
+pub use client::{create_login, create_note, items, session, vault, vaults, Session};
 pub use item::{NewLogin, NewNote};
+pub use listing::{Item, Kind, State};
 pub use vault::Vault;
 
 /// Store name, used in errors and the CLI's `stores` listing.

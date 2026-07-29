@@ -98,6 +98,54 @@ fn creates_a_login_and_a_note() {
     println!("created, read back and trashed 2 items in `{name}`");
 }
 
+#[test]
+#[ignore = "creates an item in a real vault; needs STEVEDORE_PROTON_TEST_VAULT"]
+fn lists_what_a_vault_already_holds() {
+    let Ok(name) = std::env::var(VAULT_ENV) else {
+        panic!("set {VAULT_ENV} to the vault these items may be created in");
+    };
+    let vault = proton::vault(&name).expect("the named vault should exist");
+    let stamp = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .expect("the clock should be past 1970")
+        .as_nanos();
+
+    let title = format!("stevedore live listing {stamp}");
+    let mut note = NewNote::new(&title);
+    note.note = Some(SecretValue::new(NOTE_BODY));
+    proton::create_note(&vault, &note).expect("the note should be created");
+
+    let listed = proton::items(&vault).expect("the listing should parse");
+    let found = listed.iter().find(|item| item.title == title);
+    let active = found.map(|item| (item.item_type.clone(), item.is_active()));
+
+    trash(&vault.share_id, &title);
+    let after = proton::items(&vault).expect("the listing should parse");
+
+    assert_eq!(
+        active,
+        Some((proton::Kind::Note, true)),
+        "a just-created note should list as an active note"
+    );
+    assert!(
+        after
+            .iter()
+            .find(|item| item.title == title)
+            .is_some_and(|item| !item.is_active()),
+        "a trashed note should still list, no longer active"
+    );
+    // Every kind and state in a real vault must be one this version models.
+    assert!(
+        !listed
+            .iter()
+            .any(|item| item.item_type == proton::Kind::Unknown
+                || item.state == proton::State::Unknown),
+        "the vault holds a kind or state stevedore does not model"
+    );
+
+    println!("listed {} items in `{name}`", listed.len());
+}
+
 /// Fabricated — no real secret is ever sent to a vault, even a throwaway one.
 const USERNAME: &str = "otto";
 const PASSWORD: &str = "fabricated-not-a-real-password";
