@@ -12,7 +12,7 @@ store does not mark as secret is treated as ordinary metadata.
 
 Which fields are secret is a property of each store and is listed in that
 store's own documentation (for Dashlane, see [the Personal notes](dcli/personal.md);
-for Proton Pass, [its own](pass-cli/personal.md)). The guarantees below apply to
+for Proton Pass, [the `pass-cli` notes](pass-cli/)). The guarantees below apply to
 every field marked secret, whatever the store.
 
 ## How a leak is prevented

@@ -15,5 +15,9 @@ thiserror = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
 
+[dev-dependencies]
+# The live tests read an item back through the store's CLI to check what landed.
+serde_json = { workspace = true }
+
 [lints]
 workspace = true

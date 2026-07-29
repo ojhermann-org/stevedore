@@ -13,7 +13,7 @@
 //! trash before it returns.
 //!
 //! **No secret value is ever printed.** The items these tests create hold
-//! fabricated secrets, and even those are checked by presence, never echoed.
+//! fabricated secrets, and even those are compared in memory, never echoed.
 
 use std::process::Command;
 use std::time::{SystemTime, UNIX_EPOCH};
@@ -62,40 +62,68 @@ fn creates_a_login_and_a_note() {
 
     let login_title = format!("stevedore live login {stamp}");
     let mut login = NewLogin::new(&login_title);
-    login.username = Some("otto".to_owned());
-    login.password = Some(SecretValue::new("fabricated-not-a-real-password"));
-    login.totp_uri = Some(SecretValue::new(
-        "otpauth://totp/stevedore?secret=jbswy3dpehpk3pxp",
-    ));
-    login.urls = vec!["https://example.test".to_owned()];
+    login.username = Some(USERNAME.to_owned());
+    login.password = Some(SecretValue::new(PASSWORD));
+    login.totp_uri = Some(SecretValue::new(TOTP_URI));
+    login.urls = vec![URL.to_owned()];
 
     let note_title = format!("stevedore live note {stamp}");
     let mut note = NewNote::new(&note_title);
-    note.note = Some(SecretValue::new("fabricated note body"));
+    note.note = Some(SecretValue::new(NOTE_BODY));
 
     proton::create_login(&vault, &login).expect("the login should be created");
     proton::create_note(&vault, &note).expect("the note should be created");
 
-    let listed = titles(&vault.share_id);
-    let found = [&login_title, &note_title].map(|title| listed.contains(title));
-
+    // Read both back before cleaning up, so a mismatch still leaves no litter.
+    let created_login = view(&vault.share_id, &login_title);
+    let created_note = view(&vault.share_id, &note_title);
     for title in [&login_title, &note_title] {
         trash(&vault.share_id, title);
     }
 
-    assert!(found[0], "the created login should be listed in `{name}`");
-    assert!(found[1], "the created note should be listed in `{name}`");
-    println!("created and trashed 2 items in `{name}`");
+    let content = &created_login["item"]["content"];
+    assert_eq!(content["title"], login_title.as_str());
+    let fields = &content["content"]["Login"];
+    assert_eq!(fields["username"], USERNAME);
+    assert_eq!(fields["password"], PASSWORD, "the password did not land");
+    assert_eq!(fields["totp_uri"], TOTP_URI, "the 2FA token did not land");
+    assert_eq!(fields["urls"], serde_json::json!([URL]));
+    // A login arrives without a note: Proton has the field, the template drops it.
+    assert_eq!(content["note"], "");
+
+    let content = &created_note["item"]["content"];
+    assert_eq!(content["title"], note_title.as_str());
+    assert_eq!(content["note"], NOTE_BODY, "the note body did not land");
+
+    println!("created, read back and trashed 2 items in `{name}`");
 }
 
-/// Item titles in a vault. Titles are metadata; secrets are not requested.
-fn titles(share_id: &str) -> String {
+/// Fabricated — no real secret is ever sent to a vault, even a throwaway one.
+const USERNAME: &str = "otto";
+const PASSWORD: &str = "fabricated-not-a-real-password";
+const TOTP_URI: &str = "otpauth://totp/stevedore?secret=jbswy3dpehpk3pxp";
+const URL: &str = "https://example.test";
+const NOTE_BODY: &str = "fabricated note body";
+
+/// Read an item back, secrets included. Every value it holds is fabricated, and
+/// the comparisons above run in memory — nothing here is printed.
+fn view(share_id: &str, title: &str) -> serde_json::Value {
     let out = Command::new("pass-cli")
-        .args(["item", "list", "--share-id", share_id, "--output", "json"])
+        .args([
+            "item",
+            "view",
+            "--share-id",
+            share_id,
+            "--item-title",
+            title,
+            "--output",
+            "json",
+        ])
         .output()
         .expect("pass-cli should run");
-    assert!(out.status.success(), "`pass-cli item list` should succeed");
-    String::from_utf8_lossy(&out.stdout).into_owned()
+    assert!(out.status.success(), "`pass-cli item view` should succeed");
+    // Discard the parser's message on principle: it would quote the item.
+    serde_json::from_slice(&out.stdout).unwrap_or_else(|_| panic!("`item view` returns JSON"))
 }
 
 fn trash(share_id: &str, title: &str) {
