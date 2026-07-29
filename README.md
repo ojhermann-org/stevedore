@@ -8,9 +8,10 @@ an **MCP server**.
 
 🟢 working · 🟡 in progress · 🔵 planned · 🔴 not planned
 
-| Store                  | Read | Write |
-| ---------------------- | :--: | :---: |
-| [Dashlane](docs/dcli/) |  🟢  |  🔴   |
+| Store                             | Read | Write |
+| --------------------------------- | :--: | :---: |
+| [Dashlane](docs/dcli/)            |  🟢  |  🔴   |
+| [Proton Pass](docs/pass-cli/)     |  🔵  |  🟢   |
 
 ## What it is (and isn't)
 
