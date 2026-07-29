@@ -6,8 +6,8 @@ The core library behind [`stevedore`](https://github.com/ojhermann-org/stevedore
 
 - `SecretValue` — a secret that redacts itself in `Debug` and `Display`. Read
   it deliberately with `.expose()`.
-- `dashlane` — reads a Dashlane vault through Dashlane's own `dcli`, keeping
-  values in-process and access read-only.
+- `dashlane` — reads a Dashlane vault's logins, secure notes and secrets through
+  Dashlane's own `dcli`, keeping values in-process and access read-only.
 - `proton` — creates logins and secure notes in a Proton Pass vault through
   Proton's own `pass-cli`, passing values on stdin rather than a command line.
 

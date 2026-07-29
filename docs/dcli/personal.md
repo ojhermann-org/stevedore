@@ -12,18 +12,26 @@ stevedore reads the vault by running `dcli` and keeping the results in memory fo
 the run. It never asks Dashlane to export the vault: an export would be a
 plaintext copy of every secret on disk.
 
-## What stevedore can read
+`dcli` answers from its own local copy, and refreshes that copy from Dashlane
+when it is over an hour old — so a read may reach the network even though
+stevedore asked for nothing but local data.
 
-🟢 available · 🔴 not available
+## What can be read
 
-| Dashlane UI   | Available |
-| ------------- | :-------: |
-| Logins        |    🟢     |
-| Secure notes  |    🟢     |
-| Passkeys      |    🔴     |
-| Payments      |    🔴     |
-| Personal info |    🔴     |
-| IDs           |    🔴     |
+🟢 supported · 🔵 planned · 🔴 not possible
+
+| Dashlane UI   | `dcli` | stevedore |
+| ------------- | :----: | :-------: |
+| Logins        |   🟢   |    🟢     |
+| Secure notes  |   🟢   |    🟢     |
+| Secrets       |   🟢   |    🟢     |
+| Passkeys      |   🔴   |    🔴     |
+| Payments      |   🔴   |    🔴     |
+| Personal info |   🔴   |    🔴     |
+| IDs           |   🔴   |    🔴     |
+
+Nothing can be written back: `dcli` reads the vault and offers no command that
+creates or changes an item.
 
 ### Logins
 
@@ -44,3 +52,9 @@ treated as secret too.
 
 **Not read:** the collection a note belongs to, and the attached file itself — it
 stays in Dashlane.
+
+### Secrets
+
+**Read:** title and content, including secrets marked *protected*.
+
+**Treated as secret:** the secret's content.

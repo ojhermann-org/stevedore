@@ -10,20 +10,26 @@
 //!
 //! # What can be read
 //!
-//! Logins ([`Login`]) and secure notes ([`Note`]) — nothing else. Passkeys,
-//! payments, IDs and personal info cannot be reached. Grouping is unavailable
-//! for both types: a login carries no category, and a note's [`Note::category`]
-//! does not reflect Dashlane's Collections.
+//! Logins ([`Login`]), secure notes ([`Note`]) and secrets ([`Secret`]) —
+//! nothing else. Passkeys, payments, IDs and personal info cannot be reached.
+//! Grouping is unavailable: a login carries no category, and a note's
+//! [`Note::category`] does not reflect Dashlane's Collections.
 //!
 //! Note attachments can be listed but not fetched — see [`Attachment`].
+//!
+//! Reads are served from `dcli`'s local copy of the vault, which it refreshes
+//! from Dashlane when that copy is over an hour old — so a read can reach the
+//! network without [`sync`] being called.
 
 mod client;
 mod login;
 mod note;
+mod secret;
 
-pub use client::{logins, notes, status, sync, Status};
+pub use client::{logins, notes, secrets, status, sync, Status};
 pub use login::Login;
 pub use note::{Attachment, Note, NO_CATEGORY};
+pub use secret::Secret;
 
 /// Store name, used in errors and the CLI's `stores` listing.
 pub const NAME: &str = "dashlane";

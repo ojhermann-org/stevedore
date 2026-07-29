@@ -42,7 +42,10 @@ pub fn status() -> Result<Status> {
     Ok(status)
 }
 
-/// Pull the freshest vault data from Dashlane. Call it only on request.
+/// Pull the freshest vault data from Dashlane.
+///
+/// Reads do not need this: `dcli` refreshes its local copy itself once that copy
+/// is over an hour old. Call it to force a refresh sooner.
 ///
 /// # Errors
 ///
@@ -69,6 +72,15 @@ pub fn logins() -> Result<Vec<super::Login>> {
 /// As [`logins`].
 pub fn notes() -> Result<Vec<super::Note>> {
     list(&["note", "-o", "json"], "notes")
+}
+
+/// Read every secret in the vault.
+///
+/// # Errors
+///
+/// As [`logins`].
+pub fn secrets() -> Result<Vec<super::Secret>> {
+    list(&["secret", "-o", "json"], "secrets")
 }
 
 fn list<T: DeserializeOwned>(args: &[&str], field: &'static str) -> Result<Vec<T>> {
