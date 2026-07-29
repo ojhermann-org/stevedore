@@ -6,6 +6,7 @@ use crate::cli;
 use crate::error::{CliError, Error, Result};
 
 use super::item::{NewLogin, NewNote};
+use super::listing::{Item, ItemList};
 use super::vault::{Vault, VaultList};
 
 /// The external CLI stevedore drives. It must already be logged in — stevedore
@@ -62,6 +63,27 @@ pub fn vault(name: &str) -> Result<Vault> {
         .ok_or_else(|| Error::NoSuchVault {
             name: name.to_owned(),
         })
+}
+
+/// Read what `vault` already holds, trashed items included.
+///
+/// Item descriptions only — titles, kinds and states, never contents. `pass-cli`
+/// returns values only for `--show-secrets`, which [`list_args`] never asks for.
+///
+/// # Errors
+///
+/// As [`session`].
+pub fn items(vault: &Vault) -> Result<Vec<Item>> {
+    ready()?;
+    let out = cli::run(PASS_CLI, &list_args(vault.share_id.as_str()))?;
+    let list: ItemList = crate::error::from_json(&out, "items")?;
+    Ok(list.items)
+}
+
+/// The argv for listing `share_id`, built apart from [`items`] so a test can
+/// hold it to asking for no contents.
+fn list_args(share_id: &str) -> [&str; 6] {
+    ["item", "list", "--share-id", share_id, "--output", "json"]
 }
 
 /// Create a login in `vault`.
@@ -131,5 +153,16 @@ mod tests {
     fn a_session_without_an_email_parses() {
         let session: Session = crate::error::from_json(b"{}", "session").unwrap();
         assert!(session.email.is_none());
+    }
+
+    /// Listing must never pull item contents into the process.
+    #[test]
+    fn listing_never_asks_for_secrets() {
+        let args = list_args("S1==");
+        assert!(!args.contains(&"--show-secrets"));
+        assert_eq!(
+            args,
+            ["item", "list", "--share-id", "S1==", "--output", "json"]
+        );
     }
 }

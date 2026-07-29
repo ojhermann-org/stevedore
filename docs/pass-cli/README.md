@@ -75,6 +75,16 @@ as a command-line argument.
 
 **Treated as secret:** the note's content.
 
+## What can be listed
+
+stevedore can ask a vault what it already holds: each item's title, kind, state
+(live or trashed) and identifiers.
+
+**Descriptions only, never contents.** `pass-cli` returns item values only when
+asked with `--show-secrets`, and stevedore never asks — so listing a vault brings
+no secret into the process. Reading secrets *out of* Proton Pass is a separate
+thing stevedore does not do.
+
 ## Items are created, never changed
 
 stevedore only creates items. It does not update or delete an existing one, and
