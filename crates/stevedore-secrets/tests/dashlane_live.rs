@@ -29,6 +29,7 @@ fn reads_a_real_vault_without_leaking_it() {
 
     let logins = dashlane::logins().expect("logins should parse");
     let notes = dashlane::notes().expect("notes should parse");
+    let secrets = dashlane::secrets().expect("secrets should parse");
 
     println!(
         "logins={} (password={} otp={} note={} title={} url={})",
@@ -46,6 +47,13 @@ fn reads_a_real_vault_without_leaking_it() {
         notes.iter().filter(|n| n.is_ungrouped()).count(),
         notes.iter().map(|n| n.attachments.len()).sum::<usize>(),
     );
+    println!(
+        "secrets={} (content={} secured={} title={})",
+        secrets.len(),
+        secrets.iter().filter(|s| s.content.is_some()).count(),
+        secrets.iter().filter(|s| s.is_secured()).count(),
+        secrets.iter().filter(|s| s.title.is_some()).count(),
+    );
 
     for login in &logins {
         assert!(!login.id.is_empty(), "every login carries an id");
@@ -56,6 +64,9 @@ fn reads_a_real_vault_without_leaking_it() {
     }
     for note in &notes {
         assert!(!note.id.is_empty(), "every note carries an id");
+    }
+    for secret in &secrets {
+        assert!(!secret.id.is_empty(), "every secret carries an id");
     }
 
     // Redaction against real secrets; failures name the id, never the value.
@@ -73,6 +84,16 @@ fn reads_a_real_vault_without_leaking_it() {
                     login.id
                 );
             }
+        }
+    }
+    for secret in &secrets {
+        let shown = format!("{secret:?}");
+        if let Some(content) = secret.content.as_ref() {
+            assert!(
+                !shown.contains(content.expose()),
+                "secret {} leaked its content through Debug",
+                secret.id
+            );
         }
     }
     for note in &notes {
