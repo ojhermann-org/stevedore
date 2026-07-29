@@ -16,22 +16,25 @@ plaintext copy of every secret on disk.
 when it is over an hour old — so a read may reach the network even though
 stevedore asked for nothing but local data.
 
-## What can be read
+## What stevedore can read
 
-🟢 supported · 🔵 planned · 🔴 not possible
+🟢 available · 🔴 not available
 
-| Dashlane UI   | `dcli` | stevedore |
-| ------------- | :----: | :-------: |
-| Logins        |   🟢   |    🟢     |
-| Secure notes  |   🟢   |    🟢     |
-| Secrets       |   🟢   |    🟢     |
-| Passkeys      |   🔴   |    🔴     |
-| Payments      |   🔴   |    🔴     |
-| Personal info |   🔴   |    🔴     |
-| IDs           |   🔴   |    🔴     |
+| Dashlane UI   | Available |
+| ------------- | :-------: |
+| Logins        |    🟢     |
+| Secure notes  |    🟢     |
+| Passkeys      |    🔴     |
+| Payments      |    🔴     |
+| Personal info |    🔴     |
+| IDs           |    🔴     |
 
 Nothing can be written back: `dcli` reads the vault and offers no command that
 creates or changes an item.
+
+Dashlane's third content type, **Secrets**, is a Business feature and cannot be
+held in a Personal vault. stevedore reads it where it exists; nothing here
+covers it.
 
 ### Logins
 
@@ -53,8 +56,3 @@ treated as secret too.
 **Not read:** the collection a note belongs to, and the attached file itself — it
 stays in Dashlane.
 
-### Secrets
-
-**Read:** title and content, including secrets marked *protected*.
-
-**Treated as secret:** the secret's content.

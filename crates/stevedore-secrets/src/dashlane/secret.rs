@@ -8,6 +8,11 @@ use crate::secret::SecretValue;
 ///
 /// Its secret is [`Secret::content`]. As with a login or a note, every value is
 /// a string.
+///
+/// Secrets are a Dashlane Business feature; a Personal vault holds none, and
+/// [`secrets`] returns an empty list there.
+///
+/// [`secrets`]: super::secrets
 #[derive(Debug, Clone, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Secret {

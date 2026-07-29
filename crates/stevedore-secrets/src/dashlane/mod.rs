@@ -12,8 +12,9 @@
 //!
 //! Logins ([`Login`]), secure notes ([`Note`]) and secrets ([`Secret`]) —
 //! nothing else. Passkeys, payments, IDs and personal info cannot be reached.
-//! Grouping is unavailable: a login carries no category, and a note's
-//! [`Note::category`] does not reflect Dashlane's Collections.
+//! Secrets are a Business feature, so a Personal vault yields none. Grouping is
+//! unavailable: a login carries no category, and a note's [`Note::category`]
+//! does not reflect Dashlane's Collections.
 //!
 //! Note attachments can be listed but not fetched — see [`Attachment`].
 //!
