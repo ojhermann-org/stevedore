@@ -45,6 +45,14 @@ change.
   `.envrc.local`, `.env*`) or a vault export (`*.dashlane`, `exports/`). These may
   hold real credentials. `.gitignore` and `.githooks/pre-commit` guard them; keep
   it that way and don't `git add -f` around the guard.
+- **Never pass a secret to a store CLI as a command-line argument.** A process's
+  arguments are readable by other processes while it runs, so a secret goes on
+  **stdin** — `crate::cli::run_with_stdin` is the only channel. This is a
+  constraint on which store operations are available at all, not just on how they
+  are called: Proton Pass items are *created* (`--from-template -` reads stdin)
+  and never *updated*, because `pass-cli item update` takes values as `--field`
+  arguments. When adding a store, find its stdin door first; if it has none, that
+  operation doesn't land.
 - Store credentials for a run are supplied deliberately (flags/prompts/env for one
   invocation), never loaded ambiently in `.envrc.shared`.
 
