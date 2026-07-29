@@ -13,6 +13,28 @@ an **MCP server**.
 | [Dashlane](docs/dcli/)            |  🟢  |  🔴   |
 | [Proton Pass](docs/pass-cli/)     |  🔵  |  🟢   |
 
+## Moving secrets
+
+Both stores' own CLIs must already be installed and logged in — stevedore never
+authenticates. See [`docs/dcli/`](docs/dcli/) and
+[`docs/pass-cli/`](docs/pass-cli/).
+
+```console
+# what would change — writes nothing:
+stevedore move --to-vault "My Vault"
+
+# carry it out:
+stevedore move --to-vault "My Vault" --apply
+```
+
+A move creates items; it never updates or deletes one. It passes over anything
+already in the vault under the same title and kind, so a move that is repeated,
+or resumed after an interruption, does not leave duplicates.
+
+Two things it reports rather than decides: logins whose Dashlane note text has
+nowhere to go in Proton Pass, and items it found in the vault but could not read
+the state of. Both are listed by title so you can settle them yourself.
+
 ## What it is (and isn't)
 
 - **A mover.** stevedore _migrates_ secret values from a source store to a sink
