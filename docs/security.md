@@ -37,6 +37,10 @@ refuses to create. Where a sink offers to read an item from a file, stevedore
 does not write that file either. How each store is worked without one is covered
 in that store's documentation.
 
+That guarantee covers stevedore. The tool it hands a value to is a separate
+program with its own habits, and whether *it* keeps a copy is a question each
+store's own notes answer.
+
 ### A secret reaches a sink through a pipe, not a command line
 
 The arguments a program is run with are **visible to other processes** on the
@@ -93,8 +97,9 @@ in neither the error nor its debug form.
 - **Metadata is not redacted.** Unless identified and modeled as a secret value, fields will be treated as metadata.
 - **The store's own tool has its own behavior.** stevedore never authenticates
   and never unlocks a vault; that is set up separately with each store. How that tool
-  stores credentials, and what it does with the system clipboard, is outside
-  stevedore's control.
+  stores credentials, what it writes to disk, and what it does with the system
+  clipboard, is outside stevedore's control — see that store's notes for what its
+  tool is known to keep.
 - **Diagnostics from a store's tool are surfaced.** When a store's tool fails,
   its own error text (for example "not logged in") is shown so you can act on it.
   This is that tool's diagnostic channel, not the vault contents.

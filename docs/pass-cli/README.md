@@ -25,6 +25,20 @@ stevedore creates items in a vault you name, by running `pass-cli` and passing
 each item as JSON on the tool's standard input. Nothing is written to disk, and
 no secret ever appears in a command line.
 
+## What `pass-cli` keeps on disk
+
+`pass-cli` does not cache item content. Each command fetches what it needs from
+Proton, so the secrets stevedore writes are not left behind in a local copy.
+
+What it does keep — under `~/.local/share/proton-pass-cli/.session/` on Linux —
+is a database of vault keys and settings, and a record of the logged-in session.
+Both are encrypted, under a key held in your operating system's keyring.
+
+One caveat, true as of 2026-07-29 and reported to Proton: that database file is
+created world-readable, and only the owner-only directory around it keeps it
+private. Its contents are encrypted, so this matters if the file is lifted out of
+that directory — by a backup or sync tool, or a container mount.
+
 ## What can be written
 
 🟢 supported · 🔵 planned · 🔴 not possible
