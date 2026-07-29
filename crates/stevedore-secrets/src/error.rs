@@ -29,6 +29,20 @@ pub enum Error {
         column: usize,
     },
 
+    /// stevedore could not build an item to hand to the store.
+    ///
+    /// Carries no detail, for the reason [`Unparsable`] carries so little: a
+    /// serializer's message can quote the value that failed.
+    ///
+    /// [`Unparsable`]: Error::Unparsable
+    #[error("could not build the item to send to the store")]
+    Unserializable,
+
+    /// The store has no vault by that name. A vault name is user-chosen
+    /// metadata, never a secret.
+    #[error("the store has no vault named `{name}`")]
+    NoSuchVault { name: String },
+
     #[error(transparent)]
     Cli(#[from] CliError),
 
@@ -36,7 +50,7 @@ pub enum Error {
     Io(#[from] std::io::Error),
 }
 
-/// A failure driving an external command-line tool a store is read through.
+/// A failure driving an external command-line tool a store is worked through.
 #[derive(Debug, thiserror::Error)]
 pub enum CliError {
     #[error("`{program}` was not found on PATH")]
