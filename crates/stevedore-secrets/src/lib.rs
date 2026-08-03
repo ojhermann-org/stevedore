@@ -10,6 +10,24 @@
 //! Dashlane is read, Proton Pass is written; neither does the other. A Proton
 //! vault can be listed — item titles, kinds and states, never values — so a
 //! write can tell what is already there.
+//!
+//! # Moving a vault
+//!
+//! Planning writes nothing, so it is safe against any vault. Both stores must
+//! already be logged in — stevedore never authenticates.
+//!
+//! ```no_run
+//! use stevedore_secrets::{mover, proton};
+//!
+//! let vault = proton::vault("Personal")?;
+//!
+//! let plan = mover::plan(&vault)?;
+//! let (logins, notes) = (plan.logins(), plan.notes());
+//!
+//! let report = mover::apply(&vault, plan)?;
+//! assert_eq!(report.created, logins + notes - report.failures.len());
+//! # Ok::<(), stevedore_secrets::Error>(())
+//! ```
 
 mod cli;
 

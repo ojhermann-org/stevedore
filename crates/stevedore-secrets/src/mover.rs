@@ -131,6 +131,18 @@ pub struct Failure {
 ///
 /// Reads every Dashlane item and lists `vault`; writes nothing.
 ///
+/// ```no_run
+/// use stevedore_secrets::{mover, proton};
+///
+/// let vault = proton::vault("Personal")?;
+/// let plan = mover::plan(&vault)?;
+///
+/// for title in &plan.notes_dropped {
+///     eprintln!("note text stays behind: {title}");
+/// }
+/// # Ok::<(), stevedore_secrets::Error>(())
+/// ```
+///
 /// # Errors
 ///
 /// As [`dashlane::logins`] and [`proton::items`] — either store being

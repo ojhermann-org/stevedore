@@ -9,6 +9,16 @@ use crate::secret::SecretValue;
 ///
 /// Only `title` is required; Proton accepts an item with every other field
 /// empty.
+///
+/// ```
+/// use stevedore_secrets::{SecretValue, proton::NewLogin};
+///
+/// let mut login = NewLogin::new("GitHub");
+/// login.username = Some("otto".to_owned());
+/// login.password = Some(SecretValue::new("hunter2"));
+///
+/// assert!(!format!("{login:?}").contains("hunter2"));
+/// ```
 #[derive(Debug, Clone, Serialize)]
 pub struct NewLogin {
     /// The item's name in Proton Pass. Required.
