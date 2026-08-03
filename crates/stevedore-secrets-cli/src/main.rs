@@ -4,7 +4,9 @@
 // the product only — diagnostics still belong on stderr.
 #![expect(clippy::print_stdout, reason = "the CLI's results are its stdout")]
 
-use anyhow::{bail, Result};
+use std::fmt;
+
+use anyhow::{Result, bail};
 use clap::{Parser, Subcommand};
 use stevedore_secrets::mover::{self, Plan};
 use stevedore_secrets::{dashlane, proton};
@@ -55,7 +57,7 @@ fn run_move(vault_name: &str, apply: bool) -> Result<()> {
     let vault = proton::vault(vault_name)?;
     let plan = mover::plan(&vault)?;
 
-    print!("{}", summary(&plan, apply));
+    print!("{}", Summary { plan: &plan, apply });
 
     if !apply {
         if plan.is_empty() {
@@ -79,48 +81,62 @@ fn run_move(vault_name: &str, apply: bool) -> Result<()> {
     Ok(())
 }
 
-fn summary(plan: &Plan, apply: bool) -> String {
-    let (create, skip) = if apply {
-        ("create", "skip")
-    } else {
-        ("would create", "would skip")
-    };
+/// What a plan would do, rendered for the terminal. `apply` picks the tense.
+struct Summary<'a> {
+    plan: &'a Plan,
+    apply: bool,
+}
 
-    let mut out = format!(
-        "  {create}  {} logins\n  {create}  {} notes\n  {skip}  {} (already present)\n",
-        plan.logins(),
-        plan.notes(),
-        plan.skipped.len(),
-    );
+impl fmt::Display for Summary<'_> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let plan = self.plan;
+        let (create, skip) = if self.apply {
+            ("create", "skip")
+        } else {
+            ("would create", "would skip")
+        };
 
-    if !plan.unclassified.is_empty() {
-        out += &format!(
-            "  unclassified  {} (state unknown)\n",
-            plan.unclassified.len()
-        );
-    }
-    if !plan.notes_dropped.is_empty() {
-        out += &format!(
-            "  note dropped  {} logins carry note text\n",
-            plan.notes_dropped.len()
-        );
-    }
+        writeln!(f, "  {create}  {} logins", plan.logins())?;
+        writeln!(f, "  {create}  {} notes", plan.notes())?;
+        writeln!(f, "  {skip}  {} (already present)", plan.skipped.len())?;
 
-    if !plan.unclassified.is_empty() {
-        out += "\n  unclassified — the vault holds an item stevedore cannot read the state of:\n";
-        for existing in &plan.unclassified {
-            out += &format!("    - {}\n", existing.title);
+        if !plan.unclassified.is_empty() {
+            writeln!(
+                f,
+                "  unclassified  {} (state unknown)",
+                plan.unclassified.len()
+            )?;
         }
-    }
-
-    if !plan.notes_dropped.is_empty() {
-        out += "\n  note text stays behind — Proton's login template has no field for it:\n";
-        for title in &plan.notes_dropped {
-            out += &format!("    - {title}\n");
+        if !plan.notes_dropped.is_empty() {
+            writeln!(
+                f,
+                "  note dropped  {} logins carry note text",
+                plan.notes_dropped.len()
+            )?;
         }
-    }
 
-    out
+        if !plan.unclassified.is_empty() {
+            writeln!(
+                f,
+                "\n  unclassified — the vault holds an item stevedore cannot read the state of:"
+            )?;
+            for existing in &plan.unclassified {
+                writeln!(f, "    - {}", existing.title)?;
+            }
+        }
+
+        if !plan.notes_dropped.is_empty() {
+            writeln!(
+                f,
+                "\n  note text stays behind — Proton's login template has no field for it:"
+            )?;
+            for title in &plan.notes_dropped {
+                writeln!(f, "    - {title}")?;
+            }
+        }
+
+        Ok(())
+    }
 }
 
 #[cfg(test)]
@@ -128,6 +144,10 @@ mod tests {
     use super::*;
     use stevedore_secrets::mover::Existing;
     use stevedore_secrets::proton::Kind;
+
+    fn summary(plan: &Plan, apply: bool) -> String {
+        Summary { plan, apply }.to_string()
+    }
 
     #[test]
     fn a_dry_run_says_what_it_would_do() {

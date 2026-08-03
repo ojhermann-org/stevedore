@@ -1,5 +1,5 @@
 [workspace]
-resolver = "2"
+resolver = "3"
 members = [
     "crates/stevedore-secrets",
     "crates/stevedore-secrets-cli",
@@ -11,7 +11,7 @@ members = [
 [workspace.package]
 # No shared `version`: each crate carries its own. Nothing is published yet —
 # every crate is `publish = false` until the owner cuts a release.
-edition = "2021"
+edition = "2024"
 # Clippy gates 70+ lints on this value, and leaving it unset makes it assume the
 # current toolchain — so the lint set below drifts with every upgrade.
 rust-version = "1.97"
@@ -122,10 +122,6 @@ or_fun_call                = "deny"
 use_self                   = "deny"
 equatable_if_let           = "deny"
 trivial_regex              = "deny"
-
-# The CLI's summary builds a String and returns it, which is a `Display` impl
-# waiting to happen. Denied once that refactor lands.
-format_push_string = "allow"
 
 # Inert unless CI runs `cargo doc`; it does.
 [workspace.lints.rustdoc]

@@ -9,6 +9,7 @@ use serde::de::DeserializeOwned;
 /// store is driven live in their own types — see [`CliError`] for stores driven
 /// through an external command-line tool.
 #[derive(Debug, thiserror::Error)]
+#[non_exhaustive]
 pub enum Error {
     /// The store has no usable session. stevedore never authenticates; logging
     /// the store's CLI in is a separate, one-time setup.
@@ -57,12 +58,13 @@ pub enum Error {
     Cli(#[from] CliError),
 
     /// An I/O failure talking to the store's command-line tool.
-    #[error("i/o error: {0}")]
+    #[error(transparent)]
     Io(#[from] std::io::Error),
 }
 
 /// A failure driving an external command-line tool a store is worked through.
 #[derive(Debug, thiserror::Error)]
+#[non_exhaustive]
 pub enum CliError {
     /// The tool is not installed, or not on `PATH`.
     #[error("`{program}` was not found on PATH")]
