@@ -12,7 +12,10 @@ pub(super) const DCLI: &str = "dcli";
 /// What `dcli status` reports.
 #[derive(Debug, Clone)]
 pub struct Status {
+    /// Whether a device is registered and an account is signed in.
     pub logged_in: bool,
+
+    /// Whether the vault is locked, so reads cannot be served.
     pub locked: bool,
     /// The account email, when logged in.
     pub login: Option<String>,

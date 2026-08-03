@@ -22,7 +22,9 @@ use crate::{dashlane, Error, Result};
 /// An item a move would create in the sink.
 #[derive(Debug)]
 pub enum Planned {
+    /// A login to create.
     Login(NewLogin),
+    /// A secure note to create. Dashlane secrets land here too.
     Note(NewNote),
 }
 
@@ -49,7 +51,10 @@ impl Planned {
 /// An item already in the sink that a planned item matched.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Existing {
+    /// The item's title in the sink.
     pub title: String,
+
+    /// The kind it is stored as.
     pub kind: Kind,
 }
 
@@ -112,7 +117,10 @@ pub struct Report {
 /// One item that could not be created.
 #[derive(Debug)]
 pub struct Failure {
+    /// The title the item would have been created with.
     pub title: String,
+
+    /// Why it could not be created.
     pub error: Error,
 }
 

@@ -20,17 +20,30 @@ pub struct Login {
     /// Emitted in braces (`{D47734C4-…}`); see [`Login::bare_id`].
     pub id: String,
 
+    /// The login's name in Dashlane. A record can be untitled.
     pub title: Option<String>,
+
+    /// The site the login is for.
     pub url: Option<String>,
+
+    /// URL-matching settings. Dashlane documents none of their semantics, so
+    /// stevedore carries them without interpreting them.
     pub user_selected_url: Option<String>,
+    /// See [`Login::user_selected_url`].
     pub use_fixed_url: Option<String>,
+    /// See [`Login::user_selected_url`].
     pub subdomain_only: Option<String>,
 
     /// The primary username. Present on far fewer records than `email`.
     pub login: Option<String>,
+
+    /// The account email.
     pub email: Option<String>,
+
+    /// An alternate username Dashlane can fill instead of [`Login::login`].
     pub secondary_login: Option<String>,
 
+    /// The login's password. Redacted.
     pub password: Option<SecretValue>,
 
     /// A 2FA token as an `otpauth://` URI, when the login has one.
@@ -44,24 +57,46 @@ pub struct Login {
     pub note: Option<SecretValue>,
 
     // dcli exposes no category on a login; don't add a field hoping it appears.
+    /// Dashlane's own status marker for the record.
     pub status: Option<String>,
+
+    /// Dashlane's assessment of the password's strength.
     pub strength: Option<String>,
+
+    /// `"true"` when the login is starred in Dashlane's UI.
     pub is_favorite: Option<String>,
+
+    /// Whether Dashlane submits the login form automatically.
     pub auto_login: Option<String>,
+
+    /// Whether Dashlane requires the Master Password before filling this login.
     pub auto_protected: Option<String>,
+
+    /// Reported by `dcli` with no documented meaning.
     pub checked: Option<String>,
+
+    /// How many times the login has been used, as a string.
     pub number_use: Option<String>,
+
+    /// An opaque per-record identifier, distinct from [`Login::id`].
     pub anon_id: Option<String>,
+
+    /// Dashlane's locale marker for the record, e.g. `"UNIVERSAL"`.
     pub locale_format: Option<String>,
 
     /// Nested JSON inside a JSON string (e.g. `"{\"associated_domains\":[]}"`),
     /// left unparsed.
     pub linked_services: Option<String>,
 
+    /// When the login was created — epoch seconds, as a string.
     pub creation_datetime: Option<String>,
+    /// When the record last changed, Dashlane's own edits included.
     pub modification_datetime: Option<String>,
+    /// When the user last changed the record.
     pub user_modification_datetime: Option<String>,
+    /// When Dashlane last backed the record up.
     pub last_backup_time: Option<String>,
+    /// When the login was last used.
     pub last_use: Option<String>,
 }
 

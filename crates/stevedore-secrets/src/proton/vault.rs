@@ -10,6 +10,8 @@ use serde::Deserialize;
 /// [`share_id`]: Vault::share_id
 #[derive(Debug, Clone, Deserialize)]
 pub struct Vault {
+    /// The vault's name, as shown in Proton Pass. Chosen by the user and not
+    /// necessarily unique.
     pub name: String,
 
     /// Identifies the vault itself.

@@ -19,6 +19,7 @@ pub struct Secret {
     /// Braced identifier, as on a login. See [`Secret::bare_id`].
     pub id: String,
 
+    /// The secret's name in Dashlane. A secret can be untitled.
     pub title: Option<String>,
 
     /// The secret's body — the value this record exists to hold.
@@ -28,10 +29,21 @@ pub struct Secret {
     /// note. See [`Secret::is_secured`].
     pub secured: Option<String>,
 
+    /// Legacy grouping field, as on a note. It does not reflect Dashlane's
+    /// Collections.
     pub category: Option<String>,
+
+    /// An opaque per-record identifier, distinct from [`Secret::id`].
     pub anon_id: Option<String>,
+
+    /// Identifies the Dashlane space (personal or business) holding it. Empty on
+    /// a personal record.
     pub space_id: Option<String>,
+
+    /// Whether the secret is shared with others in the business account.
     pub shared_object: Option<String>,
+
+    /// Dashlane's locale marker for the record, e.g. `"UNIVERSAL"`.
     pub locale_format: Option<String>,
 
     /// Dashlane's `type` field. Its meaning is undocumented, and unlike a note's
@@ -39,10 +51,16 @@ pub struct Secret {
     #[serde(rename = "type")]
     pub kind: Option<String>,
 
+    /// When the secret was created — epoch seconds, as a string.
     pub creation_date: Option<String>,
+    /// When the secret was created. Dashlane emits this alongside
+    /// [`Secret::creation_date`].
     pub creation_date_time: Option<String>,
+    /// When the secret last changed.
     pub update_date: Option<String>,
+    /// When Dashlane last backed the secret up.
     pub last_backup_time: Option<String>,
+    /// When the user last changed the secret.
     pub user_modification_datetime: Option<String>,
 }
 

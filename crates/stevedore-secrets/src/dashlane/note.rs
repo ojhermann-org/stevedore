@@ -13,6 +13,7 @@ pub struct Note {
     /// Braced identifier, as on a login. See [`Note::bare_id`].
     pub id: String,
 
+    /// The note's name in Dashlane. A note can be untitled.
     pub title: Option<String>,
 
     /// The note body — the secret this record exists to hold.
@@ -35,12 +36,21 @@ pub struct Note {
     #[serde(default, deserialize_with = "attachments")]
     pub attachments: Vec<Attachment>,
 
+    /// Dashlane's locale marker for the record, e.g. `"UNIVERSAL"`.
     pub locale_format: Option<String>,
+
+    /// When the note was created — epoch seconds, as a string.
     pub creation_date: Option<String>,
+    /// When the note last changed.
     pub update_date: Option<String>,
+    /// When the note was created. Dashlane emits this alongside
+    /// [`Note::creation_date`].
     pub creation_datetime: Option<String>,
+    /// When the user last changed the note.
     pub user_modification_datetime: Option<String>,
+    /// When Dashlane last backed the note up.
     pub last_backup_time: Option<String>,
+    /// When the note was last opened.
     pub last_use: Option<String>,
 }
 
@@ -76,7 +86,10 @@ pub const NO_CATEGORY: &str = "noCategory";
 #[derive(Debug, Clone, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Attachment {
+    /// Identifies the attachment.
     pub id: Option<String>,
+
+    /// The file's name, e.g. `"paper.pdf"`.
     pub filename: Option<String>,
 
     /// MIME type, e.g. `"application/pdf"`.
@@ -92,16 +105,29 @@ pub struct Attachment {
     /// The account the file belongs to — an email address.
     pub owner: Option<String>,
 
+    /// The file's size in bytes as Dashlane holds it locally.
     pub local_size: Option<i64>,
+    /// The file's size in bytes as stored on Dashlane's servers.
     pub remote_size: Option<i64>,
+    /// Dashlane's revision counter for the attachment.
     pub version: Option<i64>,
+
+    /// Identifies the Dashlane space (personal or business) the file belongs to.
     pub space_id: Option<String>,
+
+    /// Dashlane's locale marker for the record.
     pub locale_format: Option<String>,
+
+    /// When the file was attached — epoch seconds, as a number here.
     pub creation_datetime: Option<i64>,
+    /// When the user last changed it.
     pub user_modification_datetime: Option<i64>,
+    /// When Dashlane last backed it up.
     pub last_backup_time: Option<i64>,
+    /// When it was last opened.
     pub last_use: Option<i64>,
 
+    /// Dashlane's own record-type tag, e.g. `"KWSecureFileInfo"`.
     #[serde(rename = "__type__")]
     pub dashlane_type: Option<String>,
 }

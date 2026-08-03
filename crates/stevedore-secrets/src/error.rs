@@ -10,9 +10,12 @@ use serde::de::DeserializeOwned;
 /// through an external command-line tool.
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
+    /// The store has no usable session. stevedore never authenticates; logging
+    /// the store's CLI in is a separate, one-time setup.
     #[error("the store is not authenticated")]
     NotAuthenticated,
 
+    /// The store is authenticated but sealed, so it will not serve a read.
     #[error("the store is locked")]
     Locked,
 
@@ -24,8 +27,11 @@ pub enum Error {
     /// smuggled in.
     #[error("could not parse the {what} the store returned (line {line}, column {column})")]
     Unparsable {
+        /// What was being parsed, e.g. `"logins"`.
         what: &'static str,
+        /// Line the parse stopped at.
         line: usize,
+        /// Column the parse stopped at.
         column: usize,
     },
 
@@ -41,11 +47,16 @@ pub enum Error {
     /// The store has no vault by that name. A vault name is user-chosen
     /// metadata, never a secret.
     #[error("the store has no vault named `{name}`")]
-    NoSuchVault { name: String },
+    NoSuchVault {
+        /// The vault name that was asked for.
+        name: String,
+    },
 
+    /// A failure driving the store's command-line tool.
     #[error(transparent)]
     Cli(#[from] CliError),
 
+    /// An I/O failure talking to the store's command-line tool.
     #[error("i/o error: {0}")]
     Io(#[from] std::io::Error),
 }
@@ -53,18 +64,30 @@ pub enum Error {
 /// A failure driving an external command-line tool a store is worked through.
 #[derive(Debug, thiserror::Error)]
 pub enum CliError {
+    /// The tool is not installed, or not on `PATH`.
     #[error("`{program}` was not found on PATH")]
-    NotFound { program: &'static str },
+    NotFound {
+        /// The command that was looked for.
+        program: &'static str,
+    },
 
+    /// The tool ran and exited non-zero.
     #[error("`{program} {args}` failed ({status}): {stderr}")]
     Failed {
+        /// The command that ran.
         program: &'static str,
+        /// Its arguments, joined by spaces. Never carries a secret: values go
+        /// on stdin.
         args: String,
+        /// How it exited.
         status: String,
+        /// Its stderr, stripped of escape codes. Its stdout is never included —
+        /// that may be vault contents.
         stderr: String,
     },
 }
 
+/// The library's result type.
 pub type Result<T> = std::result::Result<T, Error>;
 
 /// The one bridge from untrusted store output to a typed value.
