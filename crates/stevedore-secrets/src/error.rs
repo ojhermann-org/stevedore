@@ -57,9 +57,22 @@ pub enum Error {
     #[error(transparent)]
     Cli(#[from] CliError),
 
-    /// An I/O failure talking to the store's command-line tool.
-    #[error(transparent)]
-    Io(#[from] std::io::Error),
+    /// An I/O failure driving the store's command-line tool.
+    ///
+    /// Both `doing` and `program` are `&'static str`, as on [`Unparsable`], so a
+    /// runtime value cannot reach the message.
+    ///
+    /// [`Unparsable`]: Error::Unparsable
+    #[error("{doing} `{program}`")]
+    Io {
+        /// The operation that failed, e.g. `"writing to"`.
+        doing: &'static str,
+        /// The command it was talking to.
+        program: &'static str,
+        /// What the operating system reported.
+        #[source]
+        source: std::io::Error,
+    },
 }
 
 /// A failure driving an external command-line tool a store is worked through.
