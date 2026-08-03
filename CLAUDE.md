@@ -127,10 +127,12 @@ The lint config follows the cross-project defaults in `~/.claude/rust.md`
   reached through `RUSTFMT` — so plain `cargo fmt` is correct and there is no
   `cargo +nightly fmt` anywhere. The `+toolchain` syntax is rustup's and this
   repo has no rustup. Five options in `rustfmt.toml` are nightly-only, and a
-  stable rustfmt ignores them with a warning and then reports the tree as
-  unformatted; that is why the pre-push hook skips the check rather than failing
-  when it finds a stable rustfmt. Move the pin deliberately — nightly rustfmt
-  output carries no stability guarantee, so a bump can reformat the tree.
+  stable rustfmt warns, ignores them, and then **passes** — probed: a file with
+  its import groups in the wrong order is reported clean by stable and caught by
+  nightly. So a stable `cargo fmt --check` is a false green, not a false
+  failure, which is why the pre-push hook skips it rather than running it. CI is
+  the real backstop. Move the pin deliberately — nightly rustfmt output carries
+  no stability guarantee, so a bump can reformat the tree.
 - **`cargo_common_metadata` is inert only because `publish = false`.** It fires
   the moment a release is cut, and the CLI and MCP crates have no `keywords` or
   `categories`.
