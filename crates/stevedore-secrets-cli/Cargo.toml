@@ -7,6 +7,8 @@ edition.workspace = true
 license.workspace = true
 repository.workspace = true
 readme = "README.md"
+keywords = ["secrets", "password-manager", "vault", "migration", "cli"]
+categories = ["command-line-utilities", "cryptography"]
 
 [[bin]]
 name = "stevedore"
