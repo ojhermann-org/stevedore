@@ -140,8 +140,15 @@ The lint config follows the cross-project defaults in `~/.claude/rust.md`
   attribute does nothing, so it cannot be tested from here.
 - **An error message never restates its source.** Each layer contributes only
   what it uniquely knows, because a reporter joins the chain with `: `. A
-  pass-through variant that adds nothing gets `#[error(transparent)]` rather
-  than a prefix — `Error::Io` is the example.
+  pass-through variant that adds nothing gets `#[error(transparent)]`
+  (`Error::Cli`); one that knows something its source does not says that and
+  only that (`Error::Io` names the operation and the program, never the
+  operating system's message).
+- **Context fields on an error are `&'static str`.** `Error::Io`,
+  `Error::Unparsable` and `CliError` all carry static strings, so no runtime
+  value can reach a message that will be logged. A context field that has to be
+  a `String` deserves the same scrutiny as any other channel a secret could
+  take.
 - **Build rendered output with a `Display` impl, not a `String`.** A function
   that assembles a `String` with `format!` and returns it forces an allocation
   on the caller and composes with nothing; `write!` into the formatter

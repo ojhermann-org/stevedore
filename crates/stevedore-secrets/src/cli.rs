@@ -22,7 +22,9 @@ use crate::error::{CliError, Error, Result};
 /// on a non-zero exit, or [`Error::Io`].
 pub(crate) fn run(program: &'static str, args: &[&str]) -> Result<Vec<u8>> {
     let child = spawn(program, args, Stdio::null())?;
-    let output = child.wait_with_output().map_err(Error::Io)?;
+    let output = child
+        .wait_with_output()
+        .map_err(|e| io_error("waiting for", program, e))?;
     check(program, args, output)
 }
 
@@ -47,10 +49,12 @@ pub(crate) fn run_with_stdin(
     let written = pipe.write_all(input);
     drop(pipe);
 
-    let output = child.wait_with_output().map_err(Error::Io)?;
+    let output = child
+        .wait_with_output()
+        .map_err(|e| io_error("waiting for", program, e))?;
     // A non-zero exit explains a broken pipe better than the write error does.
     let stdout = check(program, args, output)?;
-    written.map_err(Error::Io)?;
+    written.map_err(|e| io_error("writing to", program, e))?;
     Ok(stdout)
 }
 
@@ -63,8 +67,16 @@ fn spawn(program: &'static str, args: &[&str], stdin: Stdio) -> Result<Child> {
         .spawn()
         .map_err(|e| match e.kind() {
             ErrorKind::NotFound => CliError::NotFound { program }.into(),
-            _ => Error::Io(e),
+            _ => io_error("spawning", program, e),
         })
+}
+
+fn io_error(doing: &'static str, program: &'static str, source: std::io::Error) -> Error {
+    Error::Io {
+        doing,
+        program,
+        source,
+    }
 }
 
 /// stdout may be a plaintext vault dump: never log it or attach it to an error.
@@ -126,6 +138,31 @@ mod tests {
             err,
             Error::Cli(CliError::NotFound { program }) if program == MISSING
         ));
+    }
+
+    /// A directory is not executable, so spawning one fails for a reason other
+    /// than not-found — the path that reaches [`Error::Io`].
+    #[test]
+    fn an_io_failure_names_the_operation_and_the_program() {
+        let err = run("/", &["ignored"]).unwrap_err();
+        let Error::Io { doing, program, .. } = &err else {
+            panic!("expected an io error, got {err:?}");
+        };
+        assert_eq!((*doing, *program), ("spawning", "/"));
+    }
+
+    /// The variant says only what it uniquely knows; the operating system's own
+    /// message stays in the source, where a reporter joins it with `: `.
+    #[test]
+    fn an_io_error_never_restates_its_source() {
+        let err = run("/", &["ignored"]).unwrap_err();
+        assert_eq!(format!("{err}"), "spawning `/`");
+
+        let source = std::error::Error::source(&err).expect("an io error should keep its source");
+        let source = source
+            .downcast_ref::<std::io::Error>()
+            .expect("the source should be the io error");
+        assert_eq!(source.kind(), ErrorKind::PermissionDenied);
     }
 
     #[test]
