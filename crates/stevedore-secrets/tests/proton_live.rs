@@ -155,6 +155,10 @@ const NOTE_BODY: &str = "fabricated note body";
 
 /// Read an item back, secrets included. Every value it holds is fabricated, and
 /// the comparisons above run in memory — nothing here is printed.
+#[expect(
+    clippy::panic,
+    reason = "a helper, so `allow-panic-in-tests` does not reach it; `expect` would print serde's message, which quotes the item"
+)]
 fn view(share_id: &str, title: &str) -> serde_json::Value {
     let out = Command::new("pass-cli")
         .args([

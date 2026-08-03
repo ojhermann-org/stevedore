@@ -68,7 +68,7 @@ pub fn vault(name: &str) -> Result<Vault> {
 /// Read what `vault` already holds, trashed items included.
 ///
 /// Item descriptions only — titles, kinds and states, never contents. `pass-cli`
-/// returns values only for `--show-secrets`, which [`list_args`] never asks for.
+/// returns values only for `--show-secrets`, which stevedore never asks for.
 ///
 /// # Errors
 ///
@@ -106,6 +106,10 @@ pub fn create_note(vault: &Vault, note: &NewNote) -> Result<()> {
 
 fn create<T: Serialize>(vault: &Vault, kind: &str, item: &T) -> Result<()> {
     ready()?;
+    #[expect(
+        clippy::map_err_ignore,
+        reason = "dropping the source is the point: its message quotes the value"
+    )]
     let payload = serde_json::to_vec(item).map_err(|_| Error::Unserializable)?;
     let args = [
         "item",

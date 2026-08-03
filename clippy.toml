@@ -1,0 +1,35 @@
+# Thresholds are pinned rather than inherited: denying a group whose lints have
+# configurable thresholds otherwise delegates a merge-blocking decision to
+# clippy's default constants.
+too-many-arguments-threshold = 7
+type-complexity-threshold    = 250
+excessive-nesting-threshold  = 5
+too-many-lines-threshold     = 100
+enum-variant-size-threshold  = 200
+large-error-threshold        = 128
+too-large-for-stack          = 200
+array-size-threshold         = 16384
+
+upper-case-acronyms-aggressive = false
+
+# Tests are exempt. None of these default to true, so without them the panic
+# rules above fight the test suite hardest. They key on the `#[test]` attribute,
+# not on a `#[cfg(test)]` module, so a test *helper* is not covered.
+allow-unwrap-in-tests           = true
+allow-panic-in-tests            = true
+allow-indexing-slicing-in-tests = true
+allow-dbg-in-tests              = true
+allow-print-in-tests            = true
+allow-useless-vec-in-tests      = true
+
+# Lock poisoning is the one unwrap with no better answer.
+allow-unwrap-types = ["std::sync::LockResult"]
+
+# RefCell is a panicking API every lint above misses; the try_ variants are
+# drop-in. Grown from decisions, never speculation — verify an entry fires
+# before adding it, because a mis-namespaced path bans nothing and only warns.
+# A TOML inline table must stay on one line, so these do not wrap.
+disallowed-methods = [
+  { path = "std::cell::RefCell::borrow", reason = "panics if already mutably borrowed; use try_borrow" },
+  { path = "std::cell::RefCell::borrow_mut", reason = "panics if already borrowed; use try_borrow_mut" },
+]

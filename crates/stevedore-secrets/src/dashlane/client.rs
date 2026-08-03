@@ -23,6 +23,9 @@ pub struct Status {
 /// # Errors
 ///
 /// [`CliError::NotFound`] when `dcli` isn't installed, or [`CliError::Failed`].
+///
+/// [`CliError::NotFound`]: crate::CliError::NotFound
+/// [`CliError::Failed`]: crate::CliError::Failed
 pub fn status() -> Result<Status> {
     let out = run(&["status"])?;
     let text = String::from_utf8_lossy(&out);
@@ -50,6 +53,8 @@ pub fn status() -> Result<Status> {
 /// # Errors
 ///
 /// [`Error::NotAuthenticated`] if the vault isn't ready, or [`CliError::Failed`].
+///
+/// [`CliError::Failed`]: crate::CliError::Failed
 pub fn sync() -> Result<()> {
     ready()?;
     run(&["sync"]).map(|_| ())
@@ -61,6 +66,8 @@ pub fn sync() -> Result<()> {
 ///
 /// [`Error::NotAuthenticated`], [`Error::Locked`], [`CliError::Failed`], or
 /// [`Error::Unparsable`] if the response isn't the expected shape.
+///
+/// [`CliError::Failed`]: crate::CliError::Failed
 pub fn logins() -> Result<Vec<super::Login>> {
     list(&["password", "-o", "json"], "logins")
 }
