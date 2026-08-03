@@ -13,6 +13,16 @@ use serde::Deserialize;
 /// `Deserialize` is derived so a source parses straight into a redacting type,
 /// never through an intermediate `String`. `Serialize` is deliberately not
 /// implemented, so a secret is never written out by accident.
+///
+/// ```
+/// use stevedore_secrets::SecretValue;
+///
+/// let secret = SecretValue::new("hunter2");
+///
+/// assert_eq!(secret.to_string(), "<redacted>");
+/// assert_eq!(format!("{secret:?}"), "SecretValue(<redacted>)");
+/// assert_eq!(secret.expose(), "hunter2");
+/// ```
 #[derive(Clone, PartialEq, Eq, Deserialize)]
 #[serde(transparent)]
 pub struct SecretValue(String);
