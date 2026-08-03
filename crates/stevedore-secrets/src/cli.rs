@@ -40,7 +40,10 @@ pub(crate) fn run_with_stdin(
     input: &[u8],
 ) -> Result<Vec<u8>> {
     let mut child = spawn(program, args, Stdio::piped())?;
-    let mut pipe = child.stdin.take().expect("stdin was piped");
+    let mut pipe = child
+        .stdin
+        .take()
+        .expect("stdin should be piped by `spawn`");
     let written = pipe.write_all(input);
     drop(pipe);
 

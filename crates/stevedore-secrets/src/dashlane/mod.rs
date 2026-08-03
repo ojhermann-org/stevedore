@@ -27,9 +27,9 @@ mod login;
 mod note;
 mod secret;
 
-pub use client::{logins, notes, secrets, status, sync, Status};
+pub use client::{Status, logins, notes, secrets, status, sync};
 pub use login::Login;
-pub use note::{Attachment, Note, NO_CATEGORY};
+pub use note::{Attachment, NO_CATEGORY, Note};
 pub use secret::Secret;
 
 /// Store name, used in errors and the CLI's `stores` listing.

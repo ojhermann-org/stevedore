@@ -18,8 +18,8 @@
 use std::process::Command;
 use std::time::{SystemTime, UNIX_EPOCH};
 
-use stevedore_secrets::proton::{self, NewLogin, NewNote};
 use stevedore_secrets::SecretValue;
+use stevedore_secrets::proton::{self, NewLogin, NewNote};
 
 const VAULT_ENV: &str = "STEVEDORE_PROTON_TEST_VAULT";
 

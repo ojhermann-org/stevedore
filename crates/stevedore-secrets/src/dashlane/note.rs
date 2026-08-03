@@ -1,6 +1,6 @@
 //! A Dashlane secure note, exactly as `dcli note -o json` reports it.
 
-use serde::{de, Deserialize, Deserializer};
+use serde::{Deserialize, Deserializer, de};
 
 use crate::secret::SecretValue;
 

@@ -130,6 +130,23 @@ The lint config follows the cross-project defaults in `~/.claude/rust.md`
 - **`cargo_common_metadata` is inert only because `publish = false`.** It fires
   the moment a release is cut, and the CLI and MCP crates have no `keywords` or
   `categories`.
+- **Edition 2024 sets rustfmt's `style_edition` too**, which orders imports
+  differently from 2021. An edition bump is therefore also a reformat.
+
+## Errors and rendered output
+
+- **`Error` and `CliError` are `#[non_exhaustive]`.** Both grow with each store,
+  and neither is inert once the crates publish. Within this workspace the
+  attribute does nothing, so it cannot be tested from here.
+- **An error message never restates its source.** Each layer contributes only
+  what it uniquely knows, because a reporter joins the chain with `: `. A
+  pass-through variant that adds nothing gets `#[error(transparent)]` rather
+  than a prefix — `Error::Io` is the example.
+- **Build rendered output with a `Display` impl, not a `String`.** A function
+  that assembles a `String` with `format!` and returns it forces an allocation
+  on the caller and composes with nothing; `write!` into the formatter
+  propagates instead. The CLI's plan summary is the worked example, and
+  `format_push_string` is denied to keep it that way.
 
 ## Repo & release conventions
 

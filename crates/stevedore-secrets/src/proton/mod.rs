@@ -31,7 +31,7 @@ mod item;
 mod listing;
 mod vault;
 
-pub use client::{create_login, create_note, items, session, vault, vaults, Session};
+pub use client::{Session, create_login, create_note, items, session, vault, vaults};
 pub use item::{NewLogin, NewNote};
 pub use listing::{Item, Kind, State};
 pub use vault::Vault;

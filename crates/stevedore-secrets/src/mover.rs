@@ -17,7 +17,7 @@
 
 use crate::dashlane::{Login, Note, Secret};
 use crate::proton::{self, Item, Kind, NewLogin, NewNote, State, Vault};
-use crate::{dashlane, Error, Result};
+use crate::{Error, Result, dashlane};
 
 /// An item a move would create in the sink.
 #[derive(Debug)]
