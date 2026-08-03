@@ -37,8 +37,9 @@ suppression fails once it stops applying.
 
 Run these **inside the dev shell**. `rustfmt.toml` uses options that need a
 nightly rustfmt, which the flake pins and supplies — so `cargo fmt` is right as
-written, with no `+nightly`. A stable rustfmt ignores those options and will
-report the tree as unformatted.
+written, with no `+nightly`. A stable rustfmt silently ignores those options and
+reports the tree as clean either way, so `cargo fmt --check` outside the shell
+proves nothing.
 
 ## Landing a change
 

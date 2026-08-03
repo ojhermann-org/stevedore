@@ -18,12 +18,14 @@ if ! command -v cargo >/dev/null 2>&1; then
 fi
 
 # rustfmt.toml sets nightly-only options, which a stable rustfmt ignores with a
-# warning — it would then report the tree as unformatted. The flake supplies a
-# pinned nightly; outside it, skip rather than fail confusingly.
+# warning and then passes regardless — a green that means nothing. The flake
+# supplies a pinned nightly; outside it, skip rather than report a false pass.
+checked="fmt + clippy"
 if rustfmt --version | grep -q nightly; then
   echo "pre-push: cargo fmt --check…"
   cargo fmt --check
 else
+  checked="clippy"
   echo "pre-push: rustfmt is not the pinned nightly; skipping the fmt check." >&2
   echo "          (enter the dev shell to run it.)" >&2
 fi
@@ -31,4 +33,4 @@ fi
 echo "pre-push: cargo clippy --all-targets…"
 cargo clippy --all-targets --locked
 
-echo "pre-push: fmt + clippy clean."
+echo "pre-push: $checked clean."
