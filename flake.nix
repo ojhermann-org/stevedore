@@ -23,9 +23,12 @@
         overlays = [ (import rust-overlay) ];
         pkgs = import nixpkgs { inherit system overlays; };
 
-        # Track the recent stable toolchain (no pinned MSRV yet). Components
-        # cover editor + lint/format tooling out of the box.
-        rustToolchain = pkgs.rust-bin.stable.latest.default.override {
+        # Pinned, not `stable.latest`: `pedantic` is denied, so a toolchain bump
+        # can break the build with no source change. Moving this is a visible
+        # one-line diff rather than a side effect of `nix flake update`. Keep it
+        # in step with `rust-version` in Cargo.toml — that is the support floor
+        # this promises consumers, this is the version it is built with.
+        rustToolchain = pkgs.rust-bin.stable."1.97.1".default.override {
           extensions = [
             "rust-src"
             "rust-analyzer"
