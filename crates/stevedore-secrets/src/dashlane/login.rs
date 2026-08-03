@@ -70,6 +70,7 @@ impl Login {
     ///
     /// A `dl://<id>` path rejects the braced form; `dcli password id=…` accepts
     /// either.
+    #[must_use]
     pub fn bare_id(&self) -> &str {
         self.id.trim_start_matches('{').trim_end_matches('}')
     }
@@ -126,7 +127,7 @@ mod tests {
 
     #[test]
     fn a_record_without_an_id_is_rejected() {
-        assert!(serde_json::from_str::<Login>(r#"{"title": "x"}"#).is_err());
+        serde_json::from_str::<Login>(r#"{"title": "x"}"#).unwrap_err();
     }
 
     #[test]

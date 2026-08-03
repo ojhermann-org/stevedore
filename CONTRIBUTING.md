@@ -20,13 +20,20 @@ The dev environment is a Nix flake, loaded by direnv (or `nix develop`):
 
 ```console
 cp .envrc.example .envrc && direnv allow
-cargo test
-cargo clippy --all-targets -- -D warnings
 cargo fmt
+cargo clippy --all-targets
+cargo test
+cargo doc --no-deps
 cargo deny check
 ```
 
 CI runs exactly these through the same flake, so green locally means green in CI.
+
+Lints carry their real level in `Cargo.toml`, so plain `cargo clippy` gives the
+same verdict CI does — no `-D warnings` needed. `cargo doc` is a gate, not a
+convenience: it is the only command that enforces the rustdoc lints. Suppress a
+lint with `#[expect(…, reason = "…")]` rather than `#[allow]`, so the
+suppression fails once it stops applying.
 
 ## Landing a change
 

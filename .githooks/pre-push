@@ -20,7 +20,7 @@ fi
 echo "pre-push: cargo fmt --check…"
 cargo fmt --check
 
-echo "pre-push: cargo clippy --all-targets -- -D warnings…"
-cargo clippy --all-targets -- -D warnings
+echo "pre-push: cargo clippy --all-targets…"
+cargo clippy --all-targets --locked
 
 echo "pre-push: fmt + clippy clean."

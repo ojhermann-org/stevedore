@@ -64,6 +64,10 @@ impl NewNote {
 /// `SecretValue` has no `Serialize` impl by design, so every serialization of a
 /// secret goes through this function — and its output goes only to a `pass-cli`
 /// stdin pipe, never to a file, an argument or a log.
+#[expect(
+    clippy::ref_option,
+    reason = "serde's `serialize_with` fixes this signature; `Option<&T>` is not available"
+)]
 fn expose<S: Serializer>(secret: &Option<SecretValue>, serializer: S) -> Result<S::Ok, S::Error> {
     match secret {
         Some(secret) => serializer.serialize_str(secret.expose()),

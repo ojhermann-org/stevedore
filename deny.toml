@@ -1,6 +1,13 @@
 # cargo-deny configuration — gates dependency licenses, advisories, bans, and
 # sources. Run locally with `cargo deny check`; also enforced in CI.
 
+[advisories]
+# A transitive unmaintained crate is as unactionable as a duplicate version.
+unmaintained = "workspace"
+# Accepted risk, with a reason and a date per entry. Adding one suppresses a
+# live advisory and is a deliberate call; removing a patched one is routine.
+ignore = []
+
 [licenses]
 # Permissive licenses (all OSI/FSF approved, no copyleft). Kept deliberately
 # tight — only what the current dependency tree actually uses. A new dependency
@@ -26,3 +33,4 @@ allow-wildcard-paths = true
 # Only the official crates.io registry; no ad-hoc git or unknown registries.
 unknown-registry = "deny"
 unknown-git = "deny"
+allow-registry = ["https://github.com/rust-lang/crates.io-index"]

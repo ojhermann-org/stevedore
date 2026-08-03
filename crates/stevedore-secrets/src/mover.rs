@@ -220,38 +220,38 @@ fn place(plan: &mut Plan, item: Planned, existing: &[Item]) {
 }
 
 fn as_proton_login(login: &Login) -> NewLogin {
-    let mut new = NewLogin::new(title_of(login));
-    new.username = login.login.clone();
-    new.email = login.email.clone();
-    new.password = login.password.clone();
-    new.totp_uri = login.otp_url.clone();
-    new.urls = login.url.iter().cloned().collect();
-    new
+    NewLogin {
+        title: title_of(login),
+        username: login.login.clone(),
+        email: login.email.clone(),
+        password: login.password.clone(),
+        totp_uri: login.otp_url.clone(),
+        urls: login.url.iter().cloned().collect(),
+    }
 }
 
 fn as_proton_note(note: &Note) -> NewNote {
-    let mut new = NewNote::new(
-        note.title
+    NewNote {
+        title: note
+            .title
             .clone()
             .filter(|title| !title.is_empty())
             .unwrap_or_else(|| note.bare_id().to_owned()),
-    );
-    new.note = note.content.clone();
-    new
+        note: note.content.clone(),
+    }
 }
 
 /// A Dashlane secret becomes a Proton note: login and note are the only kinds
 /// `pass-cli` creates from stdin, and a secret is not a login.
 fn secret_as_proton_note(secret: &Secret) -> NewNote {
-    let mut new = NewNote::new(
-        secret
+    NewNote {
+        title: secret
             .title
             .clone()
             .filter(|title| !title.is_empty())
             .unwrap_or_else(|| secret.bare_id().to_owned()),
-    );
-    new.note = secret.content.clone();
-    new
+        note: secret.content.clone(),
+    }
 }
 
 /// Proton requires a title; Dashlane does not. Fall back to the item's own id so

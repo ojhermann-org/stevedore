@@ -48,12 +48,14 @@ pub struct Secret {
 
 impl Secret {
     /// The id with Dashlane's surrounding braces removed, when it has them.
+    #[must_use]
     pub fn bare_id(&self) -> &str {
         self.id.trim_start_matches('{').trim_end_matches('}')
     }
 
     /// Whether Dashlane marks this secret as protected. `dcli` returns the
     /// content either way, so this does not imply it was withheld.
+    #[must_use]
     pub fn is_secured(&self) -> bool {
         self.secured.as_deref() == Some("true")
     }
@@ -110,7 +112,7 @@ mod tests {
 
     #[test]
     fn a_record_without_an_id_is_rejected() {
-        assert!(serde_json::from_str::<Secret>(r#"{"title": "x"}"#).is_err());
+        serde_json::from_str::<Secret>(r#"{"title": "x"}"#).unwrap_err();
     }
 
     #[test]

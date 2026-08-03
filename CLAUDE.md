@@ -105,6 +105,32 @@ place only when it adds something they can't, in as few words as possible.
   docs.rs / `--help` surface, so they stay — but they say what a type or field
   *is*, not why the design went the way it did. No rationale essays.
 
+## Lints: the manifest is authoritative
+
+The lint config follows the cross-project defaults in `~/.claude/rust.md`
+(`[workspace.lints.*]`, `clippy.toml`, `rustfmt.toml`, `deny.toml`).
+
+- **Levels live in `Cargo.toml`, never in CI.** CI runs plain `cargo clippy
+  --all-targets`, so the local verdict is the CI verdict and `warn` still means
+  "advisory". Don't reintroduce `-D warnings`.
+- **`cargo doc --no-deps` is a gate.** It is the only command that enforces
+  `[workspace.lints.rustdoc]`; without it every entry there is inert. It has
+  already caught broken links that clippy and `cargo build` both passed.
+- **Suppress with `#[expect(…, reason = "…")]`, never `#[allow]`** — `expect`
+  fails once it stops applying, so it deletes itself. Both are machine-checked.
+- **`map_err_ignore` is denied but deliberately suppressed twice**, in
+  `dashlane/note.rs` and `proton/client.rs`. Discarding the source error there
+  *is* the security rule: serde quotes the offending value, which can be a
+  secret. These are permanent, not a backlog — if a third site appears, it needs
+  the same reason or it is a bug.
+- **`rustfmt.toml` is stable-only.** The nightly options (`group_imports`,
+  `imports_granularity`, `wrap_comments`) are silently ignored on stable, so
+  they are absent rather than aspirational. Adopting them means a pinned nightly
+  rustfmt in the flake.
+- **`cargo_common_metadata` is inert only because `publish = false`.** It fires
+  the moment a release is cut, and the CLI and MCP crates have no `keywords` or
+  `categories`.
+
 ## Repo & release conventions
 
 - **Everything lands through a PR** — `main` is branch-protected (requires the

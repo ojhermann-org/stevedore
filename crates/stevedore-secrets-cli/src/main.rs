@@ -1,9 +1,13 @@
 //! `stevedore` — command-line mover for secrets between stores.
 
+// A CLI's results are its product, and the product goes to stdout. This covers
+// the product only — diagnostics still belong on stderr.
+#![expect(clippy::print_stdout, reason = "the CLI's results are its stdout")]
+
 use anyhow::{bail, Result};
 use clap::{Parser, Subcommand};
 use stevedore_secrets::mover::{self, Plan};
-use stevedore_secrets::proton;
+use stevedore_secrets::{dashlane, proton};
 
 #[derive(Parser)]
 #[command(
@@ -39,8 +43,8 @@ fn main() -> Result<()> {
     let cli = Cli::parse();
     match cli.command {
         Command::Stores => {
-            println!("sources: {}", stevedore_secrets::dashlane::NAME);
-            println!("sinks:   {}", stevedore_secrets::proton::NAME);
+            println!("sources: {}", dashlane::NAME);
+            println!("sinks:   {}", proton::NAME);
         }
         Command::Move { to_vault, apply } => run_move(&to_vault, apply)?,
     }

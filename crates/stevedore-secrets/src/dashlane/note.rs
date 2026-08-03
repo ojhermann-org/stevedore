@@ -46,22 +46,22 @@ pub struct Note {
 
 impl Note {
     /// The id with Dashlane's surrounding braces removed.
+    #[must_use]
     pub fn bare_id(&self) -> &str {
         self.id.trim_start_matches('{').trim_end_matches('}')
     }
 
     /// Whether Dashlane marks this note as protected. `dcli` returns the
     /// content either way, so this does not imply it was withheld.
+    #[must_use]
     pub fn is_secured(&self) -> bool {
         self.secured.as_deref() == Some("true")
     }
 
     /// Whether the note belongs to no category, accounting for the sentinel.
+    #[must_use]
     pub fn is_ungrouped(&self) -> bool {
-        matches!(
-            self.category.as_deref(),
-            None | Some("") | Some(NO_CATEGORY)
-        )
+        matches!(self.category.as_deref(), None | Some("" | NO_CATEGORY))
     }
 }
 
@@ -116,6 +116,10 @@ where
     match raw.as_deref().map(str::trim) {
         None | Some("") => Ok(Vec::new()),
         // Discard serde's message: it quotes the offending value, a cryptoKey.
+        #[expect(
+            clippy::map_err_ignore,
+            reason = "dropping the source is the point: its message quotes the value"
+        )]
         Some(text) => serde_json::from_str(text)
             .map_err(|_| de::Error::custom("attachments is not the expected JSON")),
     }

@@ -20,7 +20,7 @@ pub enum Error {
     ///
     /// Carries the field name and the value-free parse position only — never the
     /// parser's own message, which would quote the offending value. Built solely
-    /// by [`from_json`]; `what` is `&'static str` so a runtime value cannot be
+    /// by `from_json`; `what` is `&'static str` so a runtime value cannot be
     /// smuggled in.
     #[error("could not parse the {what} the store returned (line {line}, column {column})")]
     Unparsable {
@@ -90,7 +90,7 @@ mod tests {
 
     #[derive(Debug, Deserialize)]
     struct Sample {
-        #[allow(dead_code)]
+        #[expect(dead_code, reason = "exists only for serde to fail parsing into")]
         count: i64,
     }
 

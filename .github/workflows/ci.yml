@@ -48,14 +48,21 @@ jobs:
       - name: Formatting gate
         run: nix develop --command bash -c "cargo fmt --check"
 
-      - name: Clippy (warnings are errors)
-        run: nix develop --command bash -c "cargo clippy --all-targets -- -D warnings"
+      # No `-D warnings`: every lint carries its real level in Cargo.toml, so
+      # the local verdict is the CI verdict.
+      - name: Clippy
+        run: nix develop --command bash -c "cargo clippy --all-targets --locked"
 
       - name: Tests
-        run: nix develop --command bash -c "cargo test"
+        run: nix develop --command bash -c "cargo test --locked"
 
       - name: Doctests
-        run: nix develop --command bash -c "cargo test --doc"
+        run: nix develop --command bash -c "cargo test --doc --locked"
+
+      # The only command that enforces [workspace.lints.rustdoc]; without it
+      # every entry there is inert.
+      - name: Docs
+        run: nix develop --command bash -c "cargo doc --no-deps --locked"
 
       - name: Dependency policy (licenses, advisories, bans, sources)
         run: nix develop --command bash -c "cargo deny check"
