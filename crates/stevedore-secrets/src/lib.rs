@@ -3,7 +3,8 @@
 //! - [`SecretValue`] — a secret that redacts itself in `Debug` and `Display`.
 //!   Read it deliberately with [`SecretValue::expose`].
 //! - [`dashlane`] — read a Dashlane vault through Dashlane's own `dcli`.
-//! - [`proton`] — write into a Proton Pass vault through Proton's own `pass-cli`.
+//! - [`proton`] — write into a Proton Pass vault through Proton's own
+//!   `pass-cli`.
 //! - [`mover`] — plan a move from the one into the other, then carry it out.
 //!
 //! Dashlane is read, Proton Pass is written; neither does the other. A Proton

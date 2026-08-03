@@ -15,9 +15,11 @@
 //! to be resolved by hand, because guessing either way is wrong in a way the
 //! user would not see.
 
-use crate::dashlane::{Login, Note, Secret};
-use crate::proton::{self, Item, Kind, NewLogin, NewNote, State, Vault};
-use crate::{Error, Result, dashlane};
+use crate::{
+    Error, Result, dashlane,
+    dashlane::{Login, Note, Secret},
+    proton::{self, Item, Kind, NewLogin, NewNote, State, Vault},
+};
 
 /// An item a move would create in the sink.
 #[derive(Debug)]
@@ -72,8 +74,9 @@ pub struct Plan {
     pub unclassified: Vec<Existing>,
 
     /// Titles of Dashlane logins carrying note text, which cannot travel:
-    /// `pass-cli`'s login template has no field for it and discards one silently.
-    /// Titles only — the note body is a secret and is never recorded here.
+    /// `pass-cli`'s login template has no field for it and discards one
+    /// silently. Titles only — the note body is a secret and is never
+    /// recorded here.
     pub notes_dropped: Vec<String>,
 }
 
@@ -262,8 +265,8 @@ fn secret_as_proton_note(secret: &Secret) -> NewNote {
     }
 }
 
-/// Proton requires a title; Dashlane does not. Fall back to the item's own id so
-/// an untitled item still travels and stays identifiable.
+/// Proton requires a title; Dashlane does not. Fall back to the item's own id
+/// so an untitled item still travels and stays identifiable.
 fn title_of(login: &Login) -> String {
     login
         .title
@@ -385,7 +388,8 @@ mod tests {
     }
 
     /// A live item settles the question even when an unreadable one shares its
-    /// title, so an odd neighbour cannot strand an item that is plainly present.
+    /// title, so an odd neighbour cannot strand an item that is plainly
+    /// present.
     #[test]
     fn a_live_match_wins_over_an_unreadable_one() {
         let mut plan = Plan::default();

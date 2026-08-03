@@ -1,13 +1,15 @@
 //! Driving an external store CLI.
 //!
-//! Both halves of a move run a vendor's own command-line tool, so the rules that
-//! keep a secret out of the wrong channel live here once: stdout is treated as
-//! vault contents and never logged, stderr is stripped of escape codes before it
-//! reaches an error, and a secret is handed over on stdin rather than in an
-//! argument.
+//! Both halves of a move run a vendor's own command-line tool, so the rules
+//! that keep a secret out of the wrong channel live here once: stdout is
+//! treated as vault contents and never logged, stderr is stripped of escape
+//! codes before it reaches an error, and a secret is handed over on stdin
+//! rather than in an argument.
 
-use std::io::{ErrorKind, Write};
-use std::process::{Child, Command, Output, Stdio};
+use std::{
+    io::{ErrorKind, Write},
+    process::{Child, Command, Output, Stdio},
+};
 
 use crate::error::{CliError, Error, Result};
 

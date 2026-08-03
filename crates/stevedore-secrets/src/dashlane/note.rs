@@ -112,7 +112,8 @@ pub struct Attachment {
     /// Dashlane's revision counter for the attachment.
     pub version: Option<i64>,
 
-    /// Identifies the Dashlane space (personal or business) the file belongs to.
+    /// Identifies the Dashlane space (personal or business) the file belongs
+    /// to.
     pub space_id: Option<String>,
 
     /// Dashlane's locale marker for the record.

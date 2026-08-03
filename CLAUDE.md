@@ -123,10 +123,14 @@ The lint config follows the cross-project defaults in `~/.claude/rust.md`
   *is* the security rule: serde quotes the offending value, which can be a
   secret. These are permanent, not a backlog — if a third site appears, it needs
   the same reason or it is a bug.
-- **`rustfmt.toml` is stable-only.** The nightly options (`group_imports`,
-  `imports_granularity`, `wrap_comments`) are silently ignored on stable, so
-  they are absent rather than aspirational. Adopting them means a pinned nightly
-  rustfmt in the flake.
+- **Formatting runs on a pinned nightly rustfmt**, supplied by the flake and
+  reached through `RUSTFMT` — so plain `cargo fmt` is correct and there is no
+  `cargo +nightly fmt` anywhere. The `+toolchain` syntax is rustup's and this
+  repo has no rustup. Five options in `rustfmt.toml` are nightly-only, and a
+  stable rustfmt ignores them with a warning and then reports the tree as
+  unformatted; that is why the pre-push hook skips the check rather than failing
+  when it finds a stable rustfmt. Move the pin deliberately — nightly rustfmt
+  output carries no stability guarantee, so a bump can reformat the tree.
 - **`cargo_common_metadata` is inert only because `publish = false`.** It fires
   the moment a release is cut, and the CLI and MCP crates have no `keywords` or
   `categories`.

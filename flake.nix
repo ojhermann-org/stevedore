@@ -33,10 +33,18 @@
             "rustfmt"
           ];
         };
+
+        # Five options in rustfmt.toml are nightly-only; a stable rustfmt warns
+        # and ignores them. Pinned to a date rather than tracking nightly:
+        # nightly rustfmt output carries no stability guarantee, so an unpinned
+        # one would reformat the tree on its own schedule. Move it deliberately.
+        nightlyRustfmt = pkgs.rust-bin.nightly."2026-07-01".rustfmt;
       in
       {
         devShells.default = pkgs.mkShell {
           packages = [
+            # Ahead of rustToolchain, so a bare `rustfmt` is the nightly one too.
+            nightlyRustfmt
             rustToolchain
             pkgs.cargo-deny # dependency license / advisory / ban policy (deny.toml)
             pkgs.bacon # background `cargo check`/clippy/test runner
@@ -46,6 +54,11 @@
           ];
 
           env.RUST_BACKTRACE = "1";
+
+          # `cargo fmt` resolves rustfmt through this, so plain `cargo fmt` gets
+          # the nightly one. There is no `cargo +nightly` here: the `+toolchain`
+          # syntax is rustup's, and this shell has no rustup.
+          env.RUSTFMT = "${nightlyRustfmt}/bin/rustfmt";
 
           shellHook = ''
             echo "stevedore dev shell — $(rustc --version)"

@@ -36,8 +36,8 @@ pub struct Secret {
     /// An opaque per-record identifier, distinct from [`Secret::id`].
     pub anon_id: Option<String>,
 
-    /// Identifies the Dashlane space (personal or business) holding it. Empty on
-    /// a personal record.
+    /// Identifies the Dashlane space (personal or business) holding it. Empty
+    /// on a personal record.
     pub space_id: Option<String>,
 
     /// Whether the secret is shared with others in the business account.
@@ -46,8 +46,8 @@ pub struct Secret {
     /// Dashlane's locale marker for the record, e.g. `"UNIVERSAL"`.
     pub locale_format: Option<String>,
 
-    /// Dashlane's `type` field. Its meaning is undocumented, and unlike a note's
-    /// it is not known to carry a colour.
+    /// Dashlane's `type` field. Its meaning is undocumented, and unlike a
+    /// note's it is not known to carry a colour.
     #[serde(rename = "type")]
     pub kind: Option<String>,
 

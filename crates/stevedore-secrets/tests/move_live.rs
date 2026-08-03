@@ -1,4 +1,5 @@
-//! Smoke test for a move, against a real Dashlane vault and a real Proton vault.
+//! Smoke test for a move, against a real Dashlane vault and a real Proton
+//! vault.
 //!
 //! Ignored by default: it needs both `dcli` and `pass-cli` installed and logged
 //! in, so it cannot run in CI.
@@ -8,10 +9,10 @@
 //! ```
 //!
 //! **It plans only.** Planning writes nothing, so this never creates an item;
-//! carrying a plan out against a real vault is a deliberate act for a person, not
-//! something a test does. What it checks is that the two stores meet: that every
-//! Dashlane item maps onto something Proton Pass will take, and that the vault
-//! listing is understood well enough to decide each one.
+//! carrying a plan out against a real vault is a deliberate act for a person,
+//! not something a test does. What it checks is that the two stores meet: that
+//! every Dashlane item maps onto something Proton Pass will take, and that the
+//! vault listing is understood well enough to decide each one.
 //!
 //! **No secret value is printed.** Only counts leave this test.
 

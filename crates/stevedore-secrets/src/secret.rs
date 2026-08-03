@@ -24,7 +24,8 @@ impl SecretValue {
         Self(value.into())
     }
 
-    /// Borrow the underlying secret. Named `expose` so read sites are greppable.
+    /// Borrow the underlying secret. Named `expose` so read sites are
+    /// greppable.
     #[must_use]
     pub fn expose(&self) -> &str {
         &self.0

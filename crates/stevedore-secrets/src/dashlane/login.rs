@@ -49,8 +49,8 @@ pub struct Login {
     /// A 2FA token as an `otpauth://` URI, when the login has one.
     ///
     /// Secret material despite the name — the TOTP seed is in the query string,
-    /// so it is redacted. Dashlane's form is non-standard: empty label, a `lock`
-    /// parameter, and a lower-cased seed.
+    /// so it is redacted. Dashlane's form is non-standard: empty label, a
+    /// `lock` parameter, and a lower-cased seed.
     pub otp_url: Option<SecretValue>,
 
     /// Free-text note attached to the login. Redacted.

@@ -22,10 +22,10 @@ pub enum Error {
 
     /// The store returned output stevedore couldn't parse.
     ///
-    /// Carries the field name and the value-free parse position only — never the
-    /// parser's own message, which would quote the offending value. Built solely
-    /// by `from_json`; `what` is `&'static str` so a runtime value cannot be
-    /// smuggled in.
+    /// Carries the field name and the value-free parse position only — never
+    /// the parser's own message, which would quote the offending value.
+    /// Built solely by `from_json`; `what` is `&'static str` so a runtime
+    /// value cannot be smuggled in.
     #[error("could not parse the {what} the store returned (line {line}, column {column})")]
     Unparsable {
         /// What was being parsed, e.g. `"logins"`.
@@ -59,8 +59,8 @@ pub enum Error {
 
     /// An I/O failure driving the store's command-line tool.
     ///
-    /// Both `doing` and `program` are `&'static str`, as on [`Unparsable`], so a
-    /// runtime value cannot reach the message.
+    /// Both `doing` and `program` are `&'static str`, as on [`Unparsable`], so
+    /// a runtime value cannot reach the message.
     ///
     /// [`Unparsable`]: Error::Unparsable
     #[error("{doing} `{program}`")]
@@ -123,8 +123,9 @@ pub(crate) fn from_json<T: DeserializeOwned>(bytes: &[u8], what: &'static str) -
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use serde::Deserialize;
+
+    use super::*;
 
     #[derive(Debug, Deserialize)]
     struct Sample {
