@@ -8,8 +8,11 @@ use std::fmt;
 
 use anyhow::{Result, bail};
 use clap::{Parser, Subcommand};
-use stevedore_secrets::mover::{self, Plan};
-use stevedore_secrets::{dashlane, proton};
+use stevedore_secrets::{
+    dashlane,
+    mover::{self, Plan},
+    proton,
+};
 
 #[derive(Parser)]
 #[command(
@@ -141,9 +144,9 @@ impl fmt::Display for Summary<'_> {
 
 #[cfg(test)]
 mod tests {
+    use stevedore_secrets::{mover::Existing, proton::Kind};
+
     use super::*;
-    use stevedore_secrets::mover::Existing;
-    use stevedore_secrets::proton::Kind;
 
     fn summary(plan: &Plan, apply: bool) -> String {
         Summary { plan, apply }.to_string()

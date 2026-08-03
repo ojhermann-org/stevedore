@@ -1,7 +1,8 @@
 //! Smoke tests against a real Proton Pass account.
 //!
 //! Ignored by default: they need `pass-cli` installed and logged in, so they
-//! cannot run in CI. Run them deliberately when touching the Proton Pass writer:
+//! cannot run in CI. Run them deliberately when touching the Proton Pass
+//! writer:
 //!
 //! ```console
 //! cargo test -p stevedore-secrets --test proton_live -- --ignored --nocapture
@@ -9,17 +10,21 @@
 //!
 //! The write test **creates items in a real vault**, so it additionally needs
 //! `STEVEDORE_PROTON_TEST_VAULT` to name the vault to write to. Point it at a
-//! vault you are happy to have written to; every item it creates is moved to the
-//! trash before it returns.
+//! vault you are happy to have written to; every item it creates is moved to
+//! the trash before it returns.
 //!
 //! **No secret value is ever printed.** The items these tests create hold
 //! fabricated secrets, and even those are compared in memory, never echoed.
 
-use std::process::Command;
-use std::time::{SystemTime, UNIX_EPOCH};
+use std::{
+    process::Command,
+    time::{SystemTime, UNIX_EPOCH},
+};
 
-use stevedore_secrets::SecretValue;
-use stevedore_secrets::proton::{self, NewLogin, NewNote};
+use stevedore_secrets::{
+    SecretValue,
+    proton::{self, NewLogin, NewNote},
+};
 
 const VAULT_ENV: &str = "STEVEDORE_PROTON_TEST_VAULT";
 

@@ -2,8 +2,10 @@
 
 use serde::de::DeserializeOwned;
 
-use crate::cli;
-use crate::error::{Error, Result};
+use crate::{
+    cli,
+    error::{Error, Result},
+};
 
 /// The external CLI stevedore drives. It must already be registered and
 /// unlocked — stevedore never authenticates. See `docs/dcli/`.
@@ -50,12 +52,13 @@ pub fn status() -> Result<Status> {
 
 /// Pull the freshest vault data from Dashlane.
 ///
-/// Reads do not need this: `dcli` refreshes its local copy itself once that copy
-/// is over an hour old. Call it to force a refresh sooner.
+/// Reads do not need this: `dcli` refreshes its local copy itself once that
+/// copy is over an hour old. Call it to force a refresh sooner.
 ///
 /// # Errors
 ///
-/// [`Error::NotAuthenticated`] if the vault isn't ready, or [`CliError::Failed`].
+/// [`Error::NotAuthenticated`] if the vault isn't ready, or
+/// [`CliError::Failed`].
 ///
 /// [`CliError::Failed`]: crate::CliError::Failed
 pub fn sync() -> Result<()> {

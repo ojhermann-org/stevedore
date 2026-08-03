@@ -1,8 +1,14 @@
-# Stable options only. `group_imports`, `imports_granularity`, `wrap_comments`,
-# `comment_width` and `format_code_in_doc_comments` are nightly-only: on stable
-# rustfmt warns and ignores them, so a file listing them would document a policy
-# the formatter is not applying. Adopting them means a pinned nightly rustfmt in
-# the flake and `cargo +nightly fmt` everywhere.
+# stable
 max_width                = 100
 newline_style            = "Unix"   # the default, "Auto", is platform-dependent
 use_field_init_shorthand = true
+
+# Nightly-only, and silently ignored by a stable rustfmt — so the flake pins a
+# nightly one and points `RUSTFMT` at it. Import grouping and granularity are
+# diff hygiene rather than cosmetics: with them a new import has exactly one
+# correct position, and nothing is left for a reviewer to question.
+group_imports               = "StdExternalCrate"
+imports_granularity         = "Crate"
+wrap_comments               = true
+comment_width               = 80
+format_code_in_doc_comments = true

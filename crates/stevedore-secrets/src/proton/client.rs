@@ -2,12 +2,15 @@
 
 use serde::{Deserialize, Serialize};
 
-use crate::cli;
-use crate::error::{CliError, Error, Result};
-
-use super::item::{NewLogin, NewNote};
-use super::listing::{Item, ItemList};
-use super::vault::{Vault, VaultList};
+use super::{
+    item::{NewLogin, NewNote},
+    listing::{Item, ItemList},
+    vault::{Vault, VaultList},
+};
+use crate::{
+    cli,
+    error::{CliError, Error, Result},
+};
 
 /// The external CLI stevedore drives. It must already be logged in — stevedore
 /// never authenticates. See `docs/pass-cli/`.
@@ -30,8 +33,9 @@ pub struct Session {
 ///
 /// # Errors
 ///
-/// [`Error::NotAuthenticated`] if there is no usable session, [`CliError::NotFound`]
-/// when `pass-cli` isn't installed, [`CliError::Failed`], or [`Error::Unparsable`].
+/// [`Error::NotAuthenticated`] if there is no usable session,
+/// [`CliError::NotFound`] when `pass-cli` isn't installed,
+/// [`CliError::Failed`], or [`Error::Unparsable`].
 pub fn session() -> Result<Session> {
     ready()?;
     let out = cli::run(PASS_CLI, &["info", "-o", "json"])?;
@@ -54,8 +58,8 @@ pub fn vaults() -> Result<Vec<Vault>> {
 ///
 /// # Errors
 ///
-/// [`Error::NoSuchVault`] if the account has no vault by that name, otherwise as
-/// [`vaults`].
+/// [`Error::NoSuchVault`] if the account has no vault by that name, otherwise
+/// as [`vaults`].
 pub fn vault(name: &str) -> Result<Vault> {
     vaults()?
         .into_iter()
@@ -67,8 +71,9 @@ pub fn vault(name: &str) -> Result<Vault> {
 
 /// Read what `vault` already holds, trashed items included.
 ///
-/// Item descriptions only — titles, kinds and states, never contents. `pass-cli`
-/// returns values only for `--show-secrets`, which stevedore never asks for.
+/// Item descriptions only — titles, kinds and states, never contents.
+/// `pass-cli` returns values only for `--show-secrets`, which stevedore never
+/// asks for.
 ///
 /// # Errors
 ///

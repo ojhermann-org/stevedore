@@ -35,6 +35,11 @@ convenience: it is the only command that enforces the rustdoc lints. Suppress a
 lint with `#[expect(…, reason = "…")]` rather than `#[allow]`, so the
 suppression fails once it stops applying.
 
+Run these **inside the dev shell**. `rustfmt.toml` uses options that need a
+nightly rustfmt, which the flake pins and supplies — so `cargo fmt` is right as
+written, with no `+nightly`. A stable rustfmt ignores those options and will
+report the tree as unformatted.
+
 ## Landing a change
 
 - Work on a branch and open a PR — `main` requires a PR and the `ci` check.
