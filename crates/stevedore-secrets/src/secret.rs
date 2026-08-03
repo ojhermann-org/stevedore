@@ -18,6 +18,8 @@ use serde::Deserialize;
 pub struct SecretValue(String);
 
 impl SecretValue {
+    /// Wrap a value, redacting it from that point on.
+    #[must_use]
     pub fn new(value: impl Into<String>) -> Self {
         Self(value.into())
     }

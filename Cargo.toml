@@ -53,7 +53,7 @@ unused_qualifications         = "deny"
 unused_lifetimes              = "deny"
 unused_import_braces          = "deny"
 macro_use_extern_crate        = "deny"
-# missing_docs is denied alongside the doc comments it demands, in its own change.
+missing_docs                  = "deny"
 
 [workspace.lints.clippy]
 correctness = { level = "deny", priority = -1 }

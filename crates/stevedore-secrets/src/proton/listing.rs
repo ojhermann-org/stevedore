@@ -31,7 +31,10 @@ pub struct Item {
     #[serde(default)]
     pub flags: Vec<String>,
 
+    /// When the item was created, as `pass-cli` reports it.
     pub create_time: Option<String>,
+
+    /// When it last changed.
     pub modify_time: Option<String>,
 }
 
@@ -53,13 +56,21 @@ impl Item {
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize)]
 #[serde(rename_all = "kebab-case")]
 pub enum Kind {
+    /// A username and password.
     Login,
+    /// A secure note.
     Note,
+    /// A hide-my-email alias.
     Alias,
+    /// A payment card.
     CreditCard,
+    /// A set of personal details.
     Identity,
+    /// An SSH key pair.
     SshKey,
+    /// Wi-Fi network credentials.
     Wifi,
+    /// An item with user-defined fields.
     Custom,
 
     /// A kind this version of stevedore does not know.
@@ -73,7 +84,9 @@ pub enum Kind {
 /// `--filter-state active`.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Deserialize)]
 pub enum State {
+    /// Live in the vault.
     Active,
+    /// In the trash, and so not counted as present.
     Trashed,
 
     /// A state this version of stevedore does not know.

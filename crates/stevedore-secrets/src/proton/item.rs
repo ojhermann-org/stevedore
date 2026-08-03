@@ -11,11 +11,16 @@ use crate::secret::SecretValue;
 /// empty.
 #[derive(Debug, Clone, Serialize)]
 pub struct NewLogin {
+    /// The item's name in Proton Pass. Required.
     pub title: String,
 
+    /// The account username.
     pub username: Option<String>,
+
+    /// The account email.
     pub email: Option<String>,
 
+    /// The account password. Redacted.
     #[serde(serialize_with = "expose")]
     pub password: Option<SecretValue>,
 
@@ -24,10 +29,13 @@ pub struct NewLogin {
     #[serde(serialize_with = "expose")]
     pub totp_uri: Option<SecretValue>,
 
+    /// Sites the login applies to.
     pub urls: Vec<String>,
 }
 
 impl NewLogin {
+    /// A login with a title and nothing else set.
+    #[must_use]
     pub fn new(title: impl Into<String>) -> Self {
         Self {
             title: title.into(),
@@ -43,6 +51,7 @@ impl NewLogin {
 /// A secure note to create in a Proton Pass vault.
 #[derive(Debug, Clone, Serialize)]
 pub struct NewNote {
+    /// The item's name in Proton Pass. Required.
     pub title: String,
 
     /// The note body — the secret this item exists to hold.
@@ -51,6 +60,8 @@ pub struct NewNote {
 }
 
 impl NewNote {
+    /// A note with a title and no body.
+    #[must_use]
     pub fn new(title: impl Into<String>) -> Self {
         Self {
             title: title.into(),
