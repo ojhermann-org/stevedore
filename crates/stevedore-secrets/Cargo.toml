@@ -8,7 +8,7 @@ license.workspace = true
 repository.workspace = true
 readme = "README.md"
 keywords = ["secrets", "password-manager", "vault", "migration"]
-categories = ["command-line-utilities", "cryptography"]
+categories = ["api-bindings", "cryptography"]
 
 [dependencies]
 thiserror = { workspace = true }
