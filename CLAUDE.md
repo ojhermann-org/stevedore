@@ -139,6 +139,31 @@ The lint config follows the cross-project defaults in `~/.claude/rust.md`
 - **Edition 2024 sets rustfmt's `style_edition` too**, which orders imports
   differently from 2021. An edition bump is therefore also a reformat.
 
+## Deliberately not adopted
+
+The cross-project Rust defaults were adopted in full; these four were weighed
+and declined. They are decisions, not a backlog — reopen one only with a reason
+that has changed.
+
+- **`cargo nextest`** — `cargo test` already runs the doc tests nextest skips,
+  and CI runs both commands, so nextest would buy process isolation and nicer
+  output on a suite that takes milliseconds. Ergonomics, not coverage.
+- **`tracing`** — nothing in the library logs. Adding a logging facade to a tool
+  whose central rule is *never print a secret value* is design work, not a
+  default: the `?field` sigil formats with `Debug`, so it would lean entirely on
+  `SecretValue`'s redaction. Do it deliberately or not at all.
+- **Property testing** — no round-trip, invariant or oracle worth the machinery
+  yet. The parsers are fed fixtures captured from real vendor output, and the
+  input space is small enough to enumerate.
+- **Mutation testing** — worth running as a periodic audit, never as a gate. It
+  would mostly flag untested error branches, which is a real finding but not one
+  a merge should block on.
+
+**Every CI gate does real work.** Two passed vacuously in the past — `cargo test
+--doc` with zero doc tests, and `cargo fmt --check` under a stable rustfmt that
+cannot read the config. Both are fixed. If a gate is ever added, check that it
+can fail before trusting that it passes.
+
 ## Errors and rendered output
 
 - **`Error` and `CliError` are `#[non_exhaustive]`.** Both grow with each store,
