@@ -34,10 +34,12 @@ What it does keep — under `~/.local/share/proton-pass-cli/.session/` on Linux 
 is a database of vault keys and settings, and a record of the logged-in session.
 Both are encrypted, under a key held in your operating system's keyring.
 
-One caveat, true as of 2026-07-29 and reported to Proton: that database file is
-created world-readable, and only the owner-only directory around it keeps it
-private. Its contents are encrypted, so this matters if the file is lifted out of
-that directory — by a backup or sync tool, or a container mount.
+One caveat, for a database created before `pass-cli` 2.2.4: that file was made
+world-readable, and only the owner-only directory around it kept it private.
+2.2.4 creates it `0600`, but only when the file is absent, so an older one keeps
+its mode indefinitely — `chmod 600` on it is harmless. Its contents are
+encrypted, so this matters if the file is lifted out of that directory, by a
+backup or sync tool or a container mount. Observed on Linux, 2026-08-05.
 
 ## What can be written
 
